@@ -1,6 +1,6 @@
-const {Postgres} = require('pg');
+const {Client} = require('pg');
 
-const pg_client = new Postgres({
+const pg_client = new Client({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
