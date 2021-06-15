@@ -1,0 +1,15 @@
+{
+  "name": "hirumi",
+  "version": "1.0.0",
+  "description": "Bot do A Grande Era",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "masterproject",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.0.2",
+    "klasa": "^0.4.0"
+  }
+}
