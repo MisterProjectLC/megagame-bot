@@ -39,7 +39,7 @@ command_list.push(Command.command("help", "help <comando>: Explica a sintaxe de 
 
 command_list.push(Command.command("registerself", "registerself [team] [name]: teste debug haaaa", (com_args) => {
     if (com_args.length < 2)
-        return;
+        return args_invalidos;
     db.insertPlayer(msg.author.id, msg.author.name, com_args[0], com_args[1]);
 }));
 
@@ -53,11 +53,12 @@ Client.on("message", msg => {
 		return;
 
     let args = msg.content.substring(prefix.length).split(" ");
-    let charname = character_of(msg.author.id);
 
     for (let command in command_list) {
         if (command.name == args[0]) {
-            command.com_function(args.slice(1, args.length));
+            let res = command.com_function(args.slice(1, args.length));
+            if (res)
+                msg.reply(res);
         }
     }
 });

@@ -1,13 +1,13 @@
 {
-  "name": "hirumi",
+  "name": "megagame_master",
   "version": "1.0.0",
-  "description": "Bot do A Grande Era",
+  "description": "Bot do Megagame Futurista",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "author": "masterproject",
+  "author": "misterproject",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.0.2",
