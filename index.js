@@ -6,7 +6,7 @@ const Client = new Discord.Client();
 const db = require('./external/database.js');
 
 // Command
-var Command = require('./command');
+var Command = require('./utils/command.js');
 
 const token = '***REMOVED***';
 
@@ -21,7 +21,31 @@ var undefined_msg = "Uh-oh! Valor indefinido!";
 const args_invalidos = "Uh-oh! Numero de argumentos invalidos!";
 
 // Database
-db.
+db.connectDB();
+
+// Comandos
+var command_list = [];
+
+command_list.push(Command.command("help", "help <comando>: Explica a sintaxe de um comando. Se nenhum comando for dado, explica todos.", (com_args) => {
+    let response = "";
+    for (let command in command_list) {
+        if (com_args.length == 0)
+            response += command.description;
+        else if (command.name == args[0])
+            return command.description;
+    }
+    return response;
+}));
+
+command_list.push(Command.command("registerself", "registerself [team] [name]: teste debug haaaa", (com_args) => {
+    if (com_args.length < 2)
+        return;
+    db.insertPlayer(msg.author.id, msg.author.name, com_args[0], com_args[1]);
+}));
+
+command_list.push(Command.command("checkself", "checkself: teste debug haaaa", (com_args) => {
+    console.log(db.getPlayer(msg.author.id));
+}));
 
 // Mensagens
 Client.on("message", msg => {
@@ -30,49 +54,12 @@ Client.on("message", msg => {
 
     let args = msg.content.substring(prefix.length).split(" ");
     let charname = character_of(msg.author.id);
-    let command_list = [];
-
-    command_list.push(Command.command("help", "help <comando>: Explica a sintaxe de um comando. Se nenhum comando for dado, explica todos.", (com_args) => {
-        let response = "";
-        for (let command in command_list) {
-            if (com_args.length == 0)
-                response += command.description;
-            else if (command.name == args[0])
-                return command.description;
-        }
-        return response;
-    }));
 
     for (let command in command_list) {
         if (command.name == args[0]) {
             command.com_function(args.slice(1, args.length));
         }
     }
-
-	switch (args[0]) {
-		// Fala os comandos
-		case "help":
-            msg.reply();
-			break;
-
-        case "spend":
-            if (args.length >= 3) {
-                var amount_spent;
-                if (args.length == 3)
-                    amount_spent = 1
-                else
-                    amount_spent = args[3]
-
-                var package = CharManager.spend_spell_char(parseInt(args[2]), amount_spent, charname);
-                if (package == null) { msg.reply(undefined_msg); return; }
-
-                msg.reply("\nSlots de level " + args[2].toString(10) + ": " + package[0][args[2]].toString(10));
-                save(charname, "spellslots", package[0]);
-            } else {
-                    msg.reply(args_invalidos);
-            }
-            break;
-	}
 });
 
 
