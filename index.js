@@ -2,11 +2,8 @@
 const Discord = require('discord.js');
 const Client = new Discord.Client();
 
-// Save database
-const db = require('./external/database.js');
-
 // Command
-var Command = require('./utils/command.js');
+var Commands = require('./commands/commands.js');
 
 const token = '***REMOVED***';
 
@@ -14,40 +11,14 @@ const token = '***REMOVED***';
 // Comandos
 const prefix = ">";
 var undefined_msg = "Uh-oh! Valor indefinido!";
-const args_invalidos = "Uh-oh! Numero de argumentos invalidos!";
-var command_list = [];
+const aspas_invalidas = "Uh-oh! Aspas inválidas!";
+const perms_invalidos = "Uh-oh! Você não tem permissão para usar esse comando!";
 
 
 Client.on("ready", () => {
 	console.log("Bot online");
-    db.connectDB();
+    Commands.setup();
 });
-
-
-command_list.push(new Command.command("help", 
-"help <comando>: Explica a sintaxe de um comando. Se nenhum comando for dado, explica todos.", (com_args, msg) => {
-    let response = "";
-    command_list.forEach((command) => {
-        if (com_args.length == 0)
-            response += command.description + "\n";
-        else if (command.name == com_args[0])
-            response = command.description;
-    });
-    msg.reply(response);
-}));
-
-command_list.push(new Command.command("registerself", "registerself [team] [name]: teste debug haaaa", (com_args, msg) => {
-    if (com_args.length < 2)
-        return args_invalidos;
-    db.insertPlayer(msg.author.id, msg.author.username, com_args[0], com_args[1]).then(() => console.log("Registrado."));
-}));
-
-command_list.push(new Command.command("checkself", "checkself: teste debug haaaa", async (com_args, msg) => {
-    await db.getPlayer(msg.author.id).then((response) => {
-        console.log(response.rows[0]);
-        msg.reply(response.rows[0]);
-    });
-}));
 
 
 // Mensagens
@@ -56,12 +27,40 @@ Client.on("message", msg => {
 		return;
 
     let args = msg.content.substring(prefix.length).split(" ");
+    for (let i = 0, j = 0, open = false; i < args.length; i++) {
+        if (open)
+            args[j] += " " + args[i];
+
+        if (args[i][0] == '"')
+            if (!open) {
+                args[j] = args[i];
+                open = true;
+            } else {
+                msg.reply(aspas_invalidas);
+                return;
+            }
+        else if (args[i][args[i].length-1] == '"')
+            if (open) {
+                open = false;
+            } else {
+                msg.reply(aspas_invalidas);
+                return;
+            }
+        
+        if (!open)
+            j++;
+    }
+    console.log(args);
+
     if (args.length == 0)
         return;
 
-    command_list.forEach((command) => {
+    Commands.command_list.forEach((command) => {
         if (command.name == args[0])
-            command.func(args.slice(1, args.length), msg);
+            if (command.permission_func(msg))
+                command.func(args.slice(1, args.length), msg);
+            else
+                msg.reply(perms_invalidos);
     })
 });
 
