@@ -44,8 +44,8 @@ command_list.push(new Command.command("registerself", "registerself [team] [name
 
 command_list.push(new Command.command("checkself", "checkself: teste debug haaaa", async (com_args, msg) => {
     await db.getPlayer(msg.author.id).then((response) => {
-        console.log(response);
-        msg.reply(response);
+        console.log(response.rows[0]);
+        msg.reply(response.rows[0]);
     });
 }));
 
