@@ -2,17 +2,13 @@
 
 // Character ------------------------------
 
-var command = function(name, description, func) {
-    this.name = name;
-    this.description = description;
-    this.func = func;
-
-    this.ficha = function () {
-    };
-};
-
-	
-
+class command {
+    constructor(name, description, func) {
+        this.name = name;
+        this.description = description;
+        this.func = func;
+    }
+}
 
 // Exports
 module.exports.command = command;

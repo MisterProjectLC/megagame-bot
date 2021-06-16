@@ -11,63 +11,62 @@ var Command = require('./utils/command.js');
 const token = '***REMOVED***';
 
 
-Client.on("ready", () => {
-	console.log("Bot online");
-});
-
 // Comandos
 const prefix = ">";
 var undefined_msg = "Uh-oh! Valor indefinido!";
 const args_invalidos = "Uh-oh! Numero de argumentos invalidos!";
-
-// Database
-db.connectDB();
-
-// Comandos
 var command_list = [];
 
-command_list.push(Command.command("help", "help <comando>: Explica a sintaxe de um comando. Se nenhum comando for dado, explica todos.", (com_args) => {
-    let response = "";
-    for (let command in command_list) {
-        if (com_args.length == 0)
-            response += command.description;
-        else if (command.name == args[0])
-            return command.description;
-    }
-    return response;
-}));
 
-command_list.push(Command.command("registerself", "registerself [team] [name]: teste debug haaaa", (com_args) => {
-    if (com_args.length < 2)
-        return args_invalidos;
-    db.insertPlayer(msg.author.id, msg.author.name, com_args[0], com_args[1]);
-}));
-
-command_list.push(Command.command("checkself", "checkself: teste debug haaaa", (com_args) => {
-    console.log(db.getPlayer(msg.author.id));
-}));
-
-// Mensagens
-Client.on("message", msg => {
-	if (msg.author === Client.user)
-		return;
-
-    let args = msg.content.substring(prefix.length).split(" ");
-
-    for (let command in command_list) {
-        if (command.name == args[0]) {
-            let res = command.com_function(args.slice(1, args.length));
-            if (res)
-                msg.reply(res);
-        }
-    }
+Client.on("ready", () => {
+	console.log("Bot online");
+    db.connectDB();
 });
 
 
+command_list.push(new Command.command("help", 
+"help <comando>: Explica a sintaxe de um comando. Se nenhum comando for dado, explica todos.", (com_args, msg) => {
+    let response = "";
+    command_list.forEach((command) => {
+        if (com_args.length == 0)
+            response += command.description + "\n";
+        else if (command.name == com_args[0])
+            response = command.description;
+    });
+    msg.reply(response);
+}));
+
+command_list.push(new Command.command("registerself", "registerself [team] [name]: teste debug haaaa", (com_args, msg) => {
+    if (com_args.length < 2)
+        return args_invalidos;
+    db.insertPlayer(msg.author.id, msg.author.username, com_args[0], com_args[1]).then(() => console.log("Registrado."));
+}));
+
+command_list.push(new Command.command("checkself", "checkself: teste debug haaaa", async (com_args, msg) => {
+    await db.getPlayer(msg.author.id).then((response) => {
+        console.log(response);
+        msg.reply(response);
+    });
+}));
+
+
+// Mensagens
+Client.on("message", msg => {
+	if (msg.author === Client.user || msg.content[0] != prefix)
+		return;
+
+    let args = msg.content.substring(prefix.length).split(" ");
+    if (args.length == 0)
+        return;
+
+    command_list.forEach((command) => {
+        if (command.name == args[0])
+            command.func(args.slice(1, args.length), msg);
+    })
+});
+
 Client.login(token);
 
-
-//
 
 /*
 emitter.on(eventName, listener)#
