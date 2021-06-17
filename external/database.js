@@ -5,7 +5,7 @@ const pg_client = new Client({
     host: 'ec2-34-193-101-0.compute-1.amazonaws.com',
     database: 'd6fuerdk4ff1sr',
     password: '38ce2dbeabb340c14f505b5833e64286b914dbeb0ddf80275c21455320b1233d',
-    port: process.env.PORT || 5432,
+    port: 5432,
     ssl: { rejectUnauthorized: false }
 });
 
