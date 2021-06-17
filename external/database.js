@@ -6,6 +6,7 @@ const pg_client = new Client({
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASS,
     port: 5432,
+    ssl: { rejectUnauthorized: false }
 });
 
 async function connectDB() {
