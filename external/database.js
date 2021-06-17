@@ -5,7 +5,7 @@ const pg_client = new Client({
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASS,
-    port: 5432,
+    port: process.env.PORT || 5432,
     ssl: { rejectUnauthorized: false }
 });
 
