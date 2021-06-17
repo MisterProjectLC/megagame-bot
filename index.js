@@ -1,23 +1,29 @@
 // Discord API
+const fs = require('fs');
 const Discord = require('discord.js');
 const Client = new Discord.Client();
-
-// Command
-var Commands = require('./commands/commands.js');
-
 const token = '***REMOVED***';
 
+const db = require('./external/database.js');
 
 // Comandos
 const prefix = ">";
 var undefined_msg = "Uh-oh! Valor indefinido!";
 const aspas_invalidas = "Uh-oh! Aspas inválidas!";
 const perms_invalidos = "Uh-oh! Você não tem permissão para usar esse comando!";
+Client.commands = new Discord.Collection();
 
+// Gera os comandos - créditos para Marcus Vinicius Natrielli Garcia
+const commandFiles = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    Client.commands.set(command.name, command);
+}
 
+// Inicialização
 Client.on("ready", () => {
 	console.log("Bot online");
-    Commands.setup();
+    db.connectDB();
 });
 
 
@@ -55,10 +61,11 @@ Client.on("message", msg => {
     if (args.length == 0)
         return;
 
-    Commands.command_list.forEach((command) => {
+    const { commands } = msg.client;
+    commands.forEach((command) => {
         if (command.name == args[0])
-            if (command.permission_func(msg))
-                command.func(args.slice(1, args.length), msg);
+            if (command.permission(msg))
+                command.execute(args.slice(1, args.length), msg);
             else
                 msg.reply(perms_invalidos);
     })
