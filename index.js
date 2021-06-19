@@ -32,14 +32,22 @@ Client.on("message", msg => {
 	if (msg.author === Client.user || msg.content[0] != prefix)
 		return;
 
+    // Args
     let args = msg.content.substring(prefix.length).split(" ");
-    for (let i = 0, j = 0, open = false; i < args.length; i++) {
+    if (args.length == 0)
+        return;
+
+    // Aspas
+    let j = 0;
+    for (let i = 0, open = false; i < args.length; i++) {
         if (open)
             args[j] += " " + args[i];
+        else
+            args[j] = args[i];
 
         if (args[i][0] == '"')
             if (!open) {
-                args[j] = args[i];
+                args[j] = args[i].slice(1, args[i].length);
                 open = true;
             } else {
                 msg.reply(aspas_invalidas);
@@ -47,53 +55,29 @@ Client.on("message", msg => {
             }
         else if (args[i][args[i].length-1] == '"')
             if (open) {
+                args[j] = args[j].slice(0, args[j].length-1);
                 open = false;
             } else {
                 msg.reply(aspas_invalidas);
                 return;
             }
         
-        if (!open)
+        if (!open) {
             j++;
+        }
     }
-    console.log(args);
 
-    if (args.length == 0)
-        return;
-
+    // Comando
     const { commands } = msg.client;
     commands.forEach((command) => {
-        if (command.name == args[0])
+        if (command.name == args[0]) {
+            console.log(args[0]);
             if (command.permission(msg))
-                command.execute(args.slice(1, args.length), msg);
+                command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);
+        }
     })
 });
 
 Client.login(token);
-
-
-/*
-emitter.on(eventName, listener)#
-eventName <string> | <symbol> The name of the event.
-listener <Function> The callback function
-Returns: <EventEmitter>
-Adds the listener function to the end of the listeners array for the event named eventName. No checks are made to see if the listener has already been added. Multiple calls passing the same combination of eventName and listener will result in the listener being added, and called, multiple times.
-
-server.on('connection', (stream) => {
-  console.log('someone connected!');
-});
-Returns a reference to the EventEmitter, so that calls can be chained.
-
-By default, event listeners are invoked in the order they are added. The emitter.prependListener() method can be used as an alternative to add the event listener to the beginning of the listeners array.
-
-const myEE = new EventEmitter();
-myEE.on('foo', () => console.log('a'));
-myEE.prependListener('foo', () => console.log('b'));
-myEE.emit('foo');
-// Prints:
-//   b
-//   a
-
-*/

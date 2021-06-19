@@ -1,10 +1,63 @@
 var db = require('../external/database.js');
 
-command_log = [];
+priorityList = {"propaganda":0,
+                "bribe":1,
+                "investigate":2,
+                "recruit":3,
+                "move":4,
+                "research":5,
+                "develop":6, 
+                };
 
-async function log_command(author, command) {
-    await db.getPlayer(author.id).then((response) => {
-        command_log.push(response.rows[0].team_name + ", " + response.rows[0].role_name + ": " + command);
+functionList = {}
+
+async function logCommand(msg, command, name, args, func, custo) {
+    let author = msg.author;
+    await db.getPlayer(author.id).then(async (response) => {
+        // Log
+        let player = response.rows[0];
+        let log = player.time_nome + ", " + player.cargo + ": " + command;
+
+        // Economia
+        if (custo > 0) {
+            if (player.recursos - custo < 0) {
+                msg.reply("Recursos insuficientes!");
+                return -1;
+            }
+            db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [custo, author.id]);
+        }
+
+        // Lealdade
+        let loyalty = 20;
+        let result = await db.makeQuery(`SELECT lealdade FROM jogadores, nações WHERE jogador_id = $1 AND time_nome = nações.nome`,
+                                        [author.id]);
+        if (result.rows[0])
+            loyalty = parseInt(result.rows[0].lealdade);
+        let success = (Math.floor(Math.random() * 20) <= loyalty);
+
+        // Log feito
+        db.makeQuery(`INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso) 
+        VALUES ('$1', '$2', '$3', $4, '$5', '$6', '$7')`, [author.id, log, name, priorityList[name], args.join('§'), custo, success]);
+
+    });
+}
+
+async function undoCommand(msg, n) {
+    let author = msg.author;
+    await db.makeQuery(`SELECT * FROM logs WHERE jogador = $1 AND idade = $2`, [author.id, n]).then(async (response) => {
+        let thisLog = response.rows[0];
+        if (!thisLog) {
+            msg.reply("Log não encontrado.");
+            return;
+        }
+
+        // Economia
+        if (thisLog.custo > 0)
+            await db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE jogador_id = $2`, [thisLog.custo, author.id]);
+
+        // Log desfeito
+        await db.makeQuery(`DELETE FROM logs WHERE jogador = $1 AND idade = $2`, [author.id, n]);
+        msg.reply("Comando removido.");
     });
 }
 
@@ -12,12 +65,26 @@ async function log_command(author, command) {
 module.exports = {
     name: "showlog", 
     description: "showlog: mostra o log de comandos atual.", 
-    execute: (com_args, msg) => {
-        let response = "";
-        command_log.forEach(command => {response += command + "\n"});
-        msg.reply(response);
-    }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador"),
+    execute: async (com_args, msg) => {
+        let sql = "", values = [];
+        if (msg.member.roles.cache.some(role => role.name == "Moderador")) {
+            sql = "SELECT * FROM logs WHERE sucesso = $1 ORDER BY prioridade, idade";
+            values = [true];
+        } else {
+            sql = "SELECT * FROM logs WHERE jogador = $1 ORDER BY idade";
+            values = [msg.author.id];
+        }
+        let logs = await db.makeQuery(sql, values);
 
-    log_command: log_command
+        let response = "";
+        logs.rows.forEach(command => {response += command.comando + "\n"});
+        if (response == "")
+            msg.reply("log vazio.");
+        else
+            msg.reply(response);
+    }, 
+    permission: (msg) => true,
+
+    logCommand: logCommand,
+    undoCommand: undoCommand
 };

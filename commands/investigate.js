@@ -1,4 +1,4 @@
-var db = require('../external/database.js');
+var args_invalidos = require('../utils/command.js').args_invalidos;
 var log = require('./showlog.js');
 
 // Exports
@@ -10,17 +10,9 @@ module.exports = {
             msg.reply(args_invalidos);
             return;
         }
-        let tropas = 1;
-        if (com_args.length >= 3) {
-            tropas = parseInt(com_args[2]);
-            if (tropas == NaN) {
-                msg.reply(args_invalidos);
-                return;
-            }
-        }
         
         msg.reply("Comando enviado.");
-        log.log_command(msg.author, "move " + tropas + " tropas de " + com_args[0] + " para " + com_args[1] + ".");
+        log.logCommand(msg, "investiga " + com_args[0] + " com o método " + com_args[1] + ".", "investigate", com_args);
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar")
 };

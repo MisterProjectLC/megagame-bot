@@ -1,3 +1,4 @@
+var args_invalidos = require('../utils/command.js').args_invalidos;
 var db = require('../external/database.js');
 
 // Exports
@@ -9,7 +10,10 @@ module.exports = {
             msg.reply(args_invalidos);
             return;
         }
-        db.insertPlayer(msg.mentions.users.first().id, msg.mentions.users.first().username, com_args[1], com_args[2]).then(() => 
+        
+        db.makeQuery(`INSERT INTO jogadores (jogador_id, username, time_nome, cargo) 
+        VALUES ('$1', '$2', '$3', '$4');`,
+        [msg.mentions.users.first().id, msg.mentions.users.first().username, com_args[1], com_args[2]]).then(() => 
             msg.reply("Registrado."));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
