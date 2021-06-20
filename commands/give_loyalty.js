@@ -3,8 +3,8 @@ var db = require('../external/database.js');
 
 // Exports
 module.exports = {
-    name: "give", 
-    description: "give <pessoa> <qtd>: dá recursos para a pessoa.", 
+    name: "give_loyalty", 
+    description: "give_loyalty <nação> <qtd>: dá lealdade para a nação.", 
     execute: (com_args, msg) => {
         // Check args
         if (com_args.length < 2 || !msg.mentions.users.first()) {
@@ -19,10 +19,10 @@ module.exports = {
             return;
         }
         
-        db.makeQuery(`UPDATE jogadores
-        SET recursos = recursos + $1
-        WHERE jogador_id = $2;`,
-        [com_args[1], msg.mentions.users.first().id]).then(() => 
+        db.makeQuery(`UPDATE nações
+        SET lealdade = lealdade + $1
+        WHERE nome = $2;`,
+        [com_args[1], com_args[0]]).then(() => 
             msg.reply("Pago."));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")

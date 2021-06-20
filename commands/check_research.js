@@ -2,19 +2,26 @@ var db = require('../external/database.js');
 
 // Exports
 module.exports = {
-    name: "check_nation", 
-    description: "check_nation: mostra a Lealdade e Opiniões Públicas da sua nação.", 
+    name: "check_research", 
+    description: "check_research: mostra as especializações e tecnologias da sua nação.", 
     execute: async (com_args, msg) => {
-        await db.makeQuery(`SELECT lealdade, time_nome, objeto, valor 
-        FROM nações, opiniões, jogadores
-        WHERE jogadores.jogador_id = $1 AND jogadores.time_nome = nações.nome AND nações.nome = opiniões.sujeito`, 
+        await db.makeQuery(`SELECT nome, descrição
+        FROM pesquisas, jogadores
+        WHERE jogadores.jogador_id = $1 AND jogadores.time_nome = pesquisas.grupo`, 
         [msg.author.id]).then((result) => {
-            let response = "Nação: " + result.rows[0].time_nome + "\nLealdade: " + result.rows[0].lealdade + "\nOpiniões Públicas:\n";
+            let response = "";
             result.rows.forEach((row) => {
-                response += row.objeto + ": " + row.valor + "\n";
+                if (row.descrição == '')
+                    response += "Especialização - " + row.nome + "\n";
+                else
+                    response += "Tecnologia - " + row.nome + ": " + row.descrição + "\n";
             });
-            msg.reply(response);
+
+            if (response == '')
+                msg.reply('nenhuma pesquisa encontrada.')
+            else
+                msg.reply(response);
         });
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Cientista")
 };

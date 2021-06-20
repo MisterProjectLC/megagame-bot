@@ -1,6 +1,6 @@
 var args_invalidos = require('../utils/command.js').args_invalidos;
 var db = require('../external/database.js');
-var log = require('./show_log.js');
+var log = require('./check_log.js');
 
 // Exports
 module.exports = {

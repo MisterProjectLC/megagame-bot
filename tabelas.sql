@@ -33,10 +33,23 @@ CREATE TABLE opiniões (
 	FOREIGN KEY (objeto) REFERENCES grupos(nome)
 );
 
-ALTER TABLE logs
-add constraint jogador
-   foreign key (jogador)
-   references jogadores(jogador_id)
-   on delete cascade;
-   
-SELECT * FROM logs
+CREATE TABLE pesquisas (
+	nome varchar(50),
+	descrição varchar(500),
+	grupo varchar(50),
+	PRIMARY KEY (nome, grupo),
+	FOREIGN KEY (grupo) REFERENCES grupos(nome)
+);
+
+CREATE TABLE logs (
+	jogador text,
+	comando varchar(600),
+	idade int,
+	sucesso bool,
+	nome varchar(30),
+	prioridade int,
+	args varchar(300),
+	custo int
+	PRIMARY KEY (jogador, idade)
+	FOREIGN KEY (jogador) REFERENCES jogadores.jogador_id
+);

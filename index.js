@@ -5,7 +5,7 @@ const Client = new Discord.Client();
 const token = '***REMOVED***';
 
 const db = require('./external/database.js');
-const log = require('./commands/show_log.js');
+const log = require('./commands/check_log.js');
 
 // Comandos
 const prefix = ">";

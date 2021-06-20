@@ -16,5 +16,5 @@ module.exports = {
             msg.reply(response);
         });
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
 };

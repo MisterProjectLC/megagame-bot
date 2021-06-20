@@ -1,6 +1,6 @@
 var args_invalidos = require('../utils/command.js').args_invalidos;
 var db = require('../external/database.js');
-var log = require('./show_log.js');
+var log = require('./check_log.js');
 
 // Exports
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
         
         log.logCommand(msg, "anuncia troca com " + com_args[0] + ": " + com_args[1], "research", com_args, 0);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção"),
     command: (com_args) => {
         
     }

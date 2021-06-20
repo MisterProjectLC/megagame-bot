@@ -10,7 +10,7 @@ module.exports = {
                 return;
 
             if (com_args.length == 0)
-                response += command.description + "\n";
+                response += ">" + command.description + "\n";
             else if (command.name == com_args[0])
                 response = command.description;
         });

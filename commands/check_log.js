@@ -1,12 +1,15 @@
 var db = require('../external/database.js');
 
-priorityList = {"propaganda":0,
+priorityList = {"grant":-1,
+                "propaganda":0,
                 "bribe":1,
                 "investigate":2,
                 "recruit":3,
                 "move":4,
                 "research":5,
-                "develop":6, 
+                "develop":6,
+                "influence":7,
+                "trade":8
                 };
 
 functionList = {}
@@ -70,11 +73,11 @@ async function undoCommand(msg, n) {
 }
 
 async function executeCommand(msg, n) {
-    let logs = await db.makeQuery("SELECT * FROM logs WHERE sucesso = $1 ORDER BY prioridade, idade", [true]);
+    let logs = await db.makeQuery("SELECT * FROM logs WHERE sucesso = $1 ORDER BY prioridade DESC, idade DESC", [true]);
 
     if (logs.rows[n-1]) {
         let command = logs.rows[n-1];
-        functionList[command.nome](command.args.split('§'));
+        functionList[command.nome](command.args.split('§'), command.jogador);
         msg.reply("Executado.");
     
     } else {
@@ -85,12 +88,12 @@ async function executeCommand(msg, n) {
 
 // Exports
 module.exports = {
-    name: "show_log", 
-    description: "show_log: mostra o log de comandos atual.", 
+    name: "check_log", 
+    description: "check_log: mostra o log de comandos atual.", 
     execute: async (com_args, msg) => {
         let sql = "", values = [];
         if (msg.member.roles.cache.some(role => role.name == "Moderador")) {
-            sql = "SELECT * FROM logs WHERE sucesso = $1 ORDER BY prioridade, idade";
+            sql = "SELECT * FROM logs WHERE sucesso = $1 ORDER BY prioridade DESC, idade DESC";
             values = [true];
         } else {
             sql = "SELECT * FROM logs WHERE jogador = $1 ORDER BY idade";
