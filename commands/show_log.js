@@ -11,7 +11,14 @@ priorityList = {"propaganda":0,
 
 functionList = {}
 
-async function logCommand(msg, command, name, args, func, custo) {
+function addToList(key, value) {
+    functionList[key] = value;
+}
+
+async function logCommand(msg, command, name, args, custo) {
+    if (typeof(custo)==='undefined') 
+        custo = 1;
+
     let author = msg.author;
     await db.getPlayer(author.id).then(async (response) => {
         // Log
@@ -36,10 +43,11 @@ async function logCommand(msg, command, name, args, func, custo) {
         let success = (Math.floor(Math.random() * 20) <= loyalty);
 
         // Log feito
-        db.makeQuery(`INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso) 
-        VALUES ('$1', '$2', '$3', $4, '$5', '$6', '$7')`, [author.id, log, name, priorityList[name], args.join('§'), custo, success]);
-
+        db.makeQuery("INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso) VALUES ($1, $2, $3, $4, $5, $6, $7)", 
+        [author.id, log, name, priorityList[name], args.join('§'), custo, success]);
     });
+    msg.reply("Comando enviado.");
+    return 0;
 }
 
 async function undoCommand(msg, n) {
@@ -61,10 +69,24 @@ async function undoCommand(msg, n) {
     });
 }
 
+async function executeCommand(msg, n) {
+    let logs = await db.makeQuery("SELECT * FROM logs WHERE sucesso = $1 ORDER BY prioridade, idade", [true]);
+
+    if (logs.rows[n-1]) {
+        let command = logs.rows[n-1];
+        functionList[command.nome](command.args.split('§'));
+        msg.reply("Executado.");
+    
+    } else {
+        msg.reply("log vazio.");
+    }
+}
+
+
 // Exports
 module.exports = {
-    name: "showlog", 
-    description: "showlog: mostra o log de comandos atual.", 
+    name: "show_log", 
+    description: "show_log: mostra o log de comandos atual.", 
     execute: async (com_args, msg) => {
         let sql = "", values = [];
         if (msg.member.roles.cache.some(role => role.name == "Moderador")) {
@@ -86,5 +108,7 @@ module.exports = {
     permission: (msg) => true,
 
     logCommand: logCommand,
-    undoCommand: undoCommand
+    undoCommand: undoCommand,
+    executeCommand: executeCommand,
+    addToList: addToList
 };

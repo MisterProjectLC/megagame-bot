@@ -1,12 +1,12 @@
 var args_invalidos = require('../utils/command.js').args_invalidos;
 var db = require('../external/database.js');
-var log = require('./showlog.js');
+var log = require('./show_log.js');
 
 // Exports
 module.exports = {
     name: "bribe", 
     description: "bribe <amount>: gasta Economia para melhorar a Lealdade.", 
-    execute: (com_args, msg) => {
+    execute: async (com_args, msg) => {
         // Args
         if (com_args.length < 1) {
             msg.reply(args_invalidos);
@@ -20,10 +20,10 @@ module.exports = {
             return;
         }
         
-        msg.reply("Comando enviado.");
-        log.logCommand(msg, "gastou " + com_args[0] + " com suborno.", "bribe", com_args, (com_args) => {
-
-        }, amount);
+        await log.logCommand(msg, "gastou " + com_args[0] + " com suborno.", "bribe", com_args, amount);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Líder de Estado")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    command: (com_args) => {
+        console.log(com_args);
+    }
 };

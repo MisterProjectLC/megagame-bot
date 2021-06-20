@@ -3,8 +3,8 @@ var log = require('./show_log.js');
 
 // Exports
 module.exports = {
-    name: "undo", 
-    description: "undo [n]: cancela o último comando. Caso 'n' seja dado, cancela o comando dado n comandos atrás.", 
+    name: "execute_log", 
+    description: "execute_log [n]: executa o primeiro comando logado. Caso 'n' seja dado, executa o comando na posição n.", 
     execute: async (com_args, msg) => {
         let n = 1;
         if (com_args.length > 0) {
@@ -14,7 +14,7 @@ module.exports = {
                 return;
             }
         }
-        log.undoCommand(msg, n);
+        log.executeCommand(msg, n);
     }, 
-    permission: (msg) => true,
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
 };

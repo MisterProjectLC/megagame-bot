@@ -5,6 +5,7 @@ const Client = new Discord.Client();
 const token = '***REMOVED***';
 
 const db = require('./external/database.js');
+const log = require('./commands/show_log.js');
 
 // Comandos
 const prefix = ">";
@@ -18,6 +19,8 @@ const commandFiles = fs.readdirSync(`./commands`).filter(file => file.endsWith('
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     Client.commands.set(command.name, command);
+    if (command.command)
+        log.addToList(command.name, command.command);
 }
 
 // Inicialização

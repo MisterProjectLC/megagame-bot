@@ -17,9 +17,11 @@ module.exports = {
             return;
         }
         
-        msg.reply("Comando enviado.");
         log.logCommand(msg, "mudou OP com " + com_args[0] + " em " + com_args[1], 
-        "propaganda", com_args);
+                        "propaganda", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Líder de Estado")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    command: (com_args) => {
+        
+    }
 };

@@ -1,5 +1,5 @@
 var args_invalidos = require('../utils/command.js').args_invalidos;
-var log = require('./showlog.js');
+var log = require('./show_log.js');
 
 // Exports
 module.exports = {
@@ -11,8 +11,10 @@ module.exports = {
             return;
         }
         
-        msg.reply("Comando enviado.");
         log.logCommand(msg, "investiga " + com_args[0] + " com o método " + com_args[1] + ".", "investigate", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar"),
+    command: (com_args) => {
+        
+    }
 };
