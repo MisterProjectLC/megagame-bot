@@ -4,8 +4,8 @@ var log = require('./check_log.js');
 
 // Exports
 module.exports = {
-    name: "influence", 
-    description: "influence <território> <slot(1/2)>: coloca sua influência no slot escolhido.", 
+    name: "purge", 
+    description: "purge <território> <slot(1/2)>: remove a influência do slot escolhido.", 
     execute: async (com_args, msg) => {
         // Args
         if (com_args.length < 2) {
@@ -23,7 +23,7 @@ module.exports = {
         // Checa se território existe
         let kill = false;
         await db.makeQuery('SELECT * FROM territórios WHERE nome = $1', [com_args[0]]).then((response) => {
-            if (response.rows.length < 1)
+            if (response.rows.length < 1 || (slot == 1 && response.rows.influência1 === null) || (slot == 2 && response.rows.influência2 === null))
                 kill = true;
         });
         if (kill) {
@@ -31,12 +31,11 @@ module.exports = {
             return;
         }
         
-        log.logCommand(msg, "influencia o slot " + slot + " de " + com_args[0] + ".", 
-                        "influence", com_args);
+        log.logCommand(msg, "remove a influência do slot " + slot + " de " + com_args[0] + ".", 
+                        "purge", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Facção"),
-    command: (com_args, author_id) => {
-        db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)
-         WHERE nome = $2`, [author_id, com_args[0]]);
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    command: (com_args) => {
+        db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = NULL WHERE nome = $1`, [com_args[0]]);
     }
 };
