@@ -74,12 +74,13 @@ async function undoCommand(msg, n) {
 }
 
 
-async function executeCommand(msg, n) {
+async function executeCommand(msg, n, execute) {
     let logs = await db.makeQuery("SELECT * FROM logs WHERE sucesso = true ORDER BY prioridade");
     let nn = n -1;
     if (logs.rows[nn]) {
         let command = logs.rows[nn];
-        functionList[command.nome](command.args.split('§'), command.jogador);
+        if (execute)
+            functionList[command.nome](command.args.split('§'), command.jogador);
         db.makeQuery("DELETE FROM logs WHERE ctid IN (SELECT ctid FROM logs WHERE sucesso = true ORDER BY prioridade LIMIT 1 OFFSET " + 
                         nn + ")");
         msg.reply("Executado.");

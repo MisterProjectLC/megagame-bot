@@ -3,8 +3,8 @@ var log = require('./check_log.js');
 
 // Exports
 module.exports = {
-    name: "execute_log", 
-    description: "execute_log [n]: executa o primeiro comando logado. Caso 'n' seja dado, executa o comando na posição n.", 
+    name: "cancel_log", 
+    description: "cancel_log [n]: cancela o primeiro comando logado. Caso 'n' seja dado, cancela o comando na posição n.", 
     execute: async (com_args, msg) => {
         let n = 1;
         if (com_args.length > 0) {
@@ -14,7 +14,7 @@ module.exports = {
                 return;
             }
         }
-        log.executeCommand(msg, n, true);
+        log.executeCommand(msg, n, false);
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
 };
