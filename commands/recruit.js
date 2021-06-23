@@ -20,7 +20,8 @@ module.exports = {
                 msg.reply(args_invalidos);
                 return;
             }
-        }
+        } else
+            com_args.push(tropas);
 
         // Território existe?
         let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome = '$1'`, [com_args[0]]);
@@ -28,12 +29,16 @@ module.exports = {
             msg.reply(args_invalidos);
             return;
         }
-        
+
+        com_args.push(result.rows[0].isterrestre);
         log.logCommand(msg, " recruta " + tropas + " tropas em " + com_args[0] + ".", 
                         "recruit", com_args, tropas);
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar"),
     command: (com_args) => {
-        db.makeQuery(`UPDATE territórios SET tropas = tropas + $1 WHERE nome = $2`, [tropas, com_args[0]]);
+        if (com_args[2])
+            db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1 WHERE nome = $2`, [com_args[1], com_args[0]]);
+        //else
+            //db.makeQuery(`UPDATE territórios SET tropas = tropas + $1 WHERE nome = $2`, [com_args[1], com_args[0]]);
     }
 };

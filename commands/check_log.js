@@ -1,17 +1,19 @@
 var db = require('../external/database.js');
 
-priorityList = {"overload":-2,
-                "grant":-1,
-                "propaganda":0,
-                "bribe":1,
-                "investigate":2,
-                "recruit":3,
-                "move":4,
-                "research":5,
-                "develop":6,
-                "purge":7,
-                "influence":8,
-                "trade":9
+priorityList = {"overload":-20,
+                "grant":-10,
+                "investigate":0,
+                "operation":10,
+                "propaganda":20,
+                "bribe":30,
+                "strike":35,
+                "recruit":40,
+                "move":50,
+                "research":60,
+                "develop":70,
+                "purge":80,
+                "influence":90,
+                "trade":100
                 };
 
 functionList = {}
@@ -25,6 +27,7 @@ async function logCommand(msg, command, name, args, custo) {
         custo = 1;
 
     let author = msg.author;
+    let retorno = 0;
     await db.getPlayer(author.id).then(async (response) => {
         // Log
         let player = response.rows[0];
@@ -34,7 +37,8 @@ async function logCommand(msg, command, name, args, custo) {
         if (custo > 0) {
             if (player.recursos - custo < 0) {
                 msg.reply("Recursos insuficientes!");
-                return -1;
+                retorno = -1;
+                return;
             }
             db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [custo, author.id]);
         }
@@ -50,8 +54,10 @@ async function logCommand(msg, command, name, args, custo) {
         db.makeQuery("INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso) VALUES ($1, $2, $3, $4, $5, $6, $7)", 
         [author.id, log, name, priorityList[name], args.join('§'), custo, success]);
     });
-    msg.reply("Comando enviado.");
-    return 0;
+
+    if (retorno == 0)
+        msg.reply("Comando enviado.");
+    return retorno;
 }
 
 async function undoCommand(msg, n) {
@@ -83,7 +89,11 @@ async function executeCommand(msg, n, execute) {
             functionList[command.nome](command.args.split('§'), command.jogador);
         db.makeQuery("DELETE FROM logs WHERE ctid IN (SELECT ctid FROM logs WHERE sucesso = true ORDER BY prioridade LIMIT 1 OFFSET " + 
                         nn + ")");
-        msg.reply("Executado.");
+
+        if (execute)
+            msg.reply("Executado.");
+        else
+            msg.reply("Cancelado.");
     } else {
         msg.reply("log vazio.");
     }
