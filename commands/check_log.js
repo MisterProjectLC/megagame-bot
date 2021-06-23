@@ -122,7 +122,7 @@ module.exports = {
         else
             msg.reply(response);
     }, 
-    permission: (msg) => true,
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador"),
 
     logCommand: logCommand,
     undoCommand: undoCommand,

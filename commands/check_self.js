@@ -14,5 +14,5 @@ module.exports = {
             }
         });
     }, 
-    permission: (msg) => true
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador")
 };

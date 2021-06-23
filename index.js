@@ -6,6 +6,7 @@ const token = '***REMOVED***';
 
 const db = require('./external/database.js');
 const log = require('./commands/check_log.js');
+const toggle = require('./commands/toggle_commands.js');
 
 // Comandos
 const prefix = ">";
@@ -28,7 +29,6 @@ Client.on("ready", () => {
 	console.log("Bot online");
     db.connectDB();
 });
-
 
 // Mensagens
 Client.on("message", msg => {
@@ -75,7 +75,7 @@ Client.on("message", msg => {
     commands.forEach((command) => {
         if (command.name == args[0]) {
             console.log(args[0]);
-            if (command.permission(msg))
+            if (command.permission(msg) && (toggle.commandsEnabled || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);

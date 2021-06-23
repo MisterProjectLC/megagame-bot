@@ -25,7 +25,7 @@ module.exports = {
         
         log.logCommand(msg, "anuncia troca com " + com_args[0] + ": " + com_args[1], "research", com_args, 0);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção"),
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção" || role.name == "Espectador"),
     command: (com_args) => {
         
     }

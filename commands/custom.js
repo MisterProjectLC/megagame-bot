@@ -13,7 +13,7 @@ module.exports = {
         }
         log.logCommand(msg, com_args[0], "custom", com_args);
     }, 
-    permission: (msg) => true,
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador"),
     command: (com_args) => {
         
     }
