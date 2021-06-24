@@ -5,7 +5,7 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "trade", 
-    description: "trade <grupo> <troca>: avisa sobre uma troca com um grupo.", 
+    description: "trade <grupo> <troca>: avisa sobre sua parte de uma troca com um grupo.", 
     execute: async (com_args, msg) => {
         if (com_args.length < 2) {
             msg.reply(args_invalidos);
@@ -23,7 +23,7 @@ module.exports = {
         if (kill)
             return;
         
-        log.logCommand(msg, "anuncia troca com " + com_args[0] + ": " + com_args[1], "research", com_args, 0);
+        log.logCommand(msg, "anuncia troca com " + com_args[0] + ": " + com_args[1], "gift", com_args, 0);
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção" || role.name == "Espectador"),
     command: (com_args) => {

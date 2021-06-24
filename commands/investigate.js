@@ -13,7 +13,8 @@ module.exports = {
         
         log.logCommand(msg, "investiga " + com_args[0] + " com o método " + com_args[1] + ".", "investigate", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar"),
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar" || role.name == "Turing Testers" || role.name == "O Bobo"
+                                                            || role.name == "Movimento de Restauração Ambiental" || role.name == "Global News Network"),
     command: (com_args) => {
         
     }
