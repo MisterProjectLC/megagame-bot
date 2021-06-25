@@ -34,7 +34,7 @@ module.exports = {
         log.logCommand(msg, "remove a influência do slot " + slot + " de " + com_args[0] + ".", 
                         "purge", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 1,
     command: (com_args) => {
         db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = NULL WHERE nome = $1`, [com_args[0]]);
     }

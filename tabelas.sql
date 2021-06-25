@@ -34,6 +34,27 @@ CREATE TABLE opiniões (
 	FOREIGN KEY (objeto) REFERENCES grupos(nome)
 );
 
+CREATE TABLE tratados_fronteiras (
+	nação1 varchar(50),
+	nação2 varchar(50),
+	PRIMARY KEY (nação1, nação2),
+	FOREIGN KEY (nação1) REFERENCES nações(nome),
+	FOREIGN KEY (nação2) REFERENCES nações(nome)
+);
+
+CREATE OR REPLACE FUNCTION reciprocate_treaties() RETURNS trigger AS $$
+BEGIN
+	IF (NOT EXISTS (SELECT * FROM tratados_fronteiras WHERE nação1 = new.nação2 AND nação2 = new.nação1)) THEN
+		INSERT INTO tratados_fronteiras VALUES (new.nação2, new.nação1);
+	END IF;
+	RETURN new;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_treaties_insert AFTER INSERT ON tratados_fronteiras
+	FOR EACH ROW
+	EXECUTE PROCEDURE reciprocate_treaties();
+
 CREATE TABLE pesquisas (
 	nome varchar(50),
 	descrição varchar(500),

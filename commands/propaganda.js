@@ -20,7 +20,7 @@ module.exports = {
         log.logCommand(msg, "mudou OP com " + com_args[0] + " em " + com_args[1], 
                         "propaganda", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 1,
     command: (com_args) => {
         
     }

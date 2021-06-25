@@ -4,16 +4,16 @@ var log = require('./check_log.js');
 
 // Exports
 module.exports = {
-    name: "trade", 
-    description: "trade <grupo> <troca>: avisa sobre sua parte de uma troca com um grupo.", 
+    name: "treaty", 
+    description: "treaty <nação>: assina tratado PARA ESTE TURNO de fronteiras abertas com nação escolhida. Apenas ocorre caso ambos os lados tiverem assinado.", 
     execute: async (com_args, msg) => {
-        if (com_args.length < 2) {
+        if (com_args.length < 1) {
             msg.reply(args_invalidos);
             return;
         }
 
         let kill = false;
-        await db.makeQuery("SELECT * FROM grupos WHERE nome = $1", [com_args[2]]).then((response) => {
+        await db.makeQuery("SELECT * FROM nações WHERE nome = $1", [com_args[2]]).then((response) => {
             let thisGrupo = response.rows[0];
             if (!thisGrupo) {
                 msg.reply("Nação não encontrada.");
@@ -23,10 +23,9 @@ module.exports = {
         if (kill)
             return;
         
-        log.logCommand(msg, "anuncia troca com " + com_args[0] + ": " + com_args[1], "trade", com_args, 0);
+        log.logCommand(msg, "anuncia tratado de fronteiras com " + com_args[0] + ".", "treaty", com_args, 0);
     }, 
-    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || 
-    role.name == "Chefe de Facção" || role.name == "Espectador") && phase == 1,
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 0,
     command: (com_args) => {
         
     }

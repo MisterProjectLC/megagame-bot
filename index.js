@@ -6,13 +6,13 @@ const token = '***REMOVED***';
 
 const db = require('./external/database.js');
 const log = require('./commands/check_log.js');
-const toggle = require('./commands/toggle_commands.js');
+const phase = require('./commands/set_phase.js');
 
 // Comandos
 const prefix = ">";
-var undefined_msg = "Uh-oh! Valor indefinido!";
-const aspas_invalidas = "Uh-oh! Aspas inválidas!";
-const perms_invalidos = "Uh-oh! Você não tem permissão para usar esse comando!";
+var undefined_msg = "Valor indefinido.";
+const aspas_invalidas = "Aspas inválidas.";
+const perms_invalidos = "Você não tem permissão para usar esse comando agora.";
 Client.commands = new Discord.Collection();
 
 // Gera os comandos - créditos para Marcus Vinicius Natrielli Garcia
@@ -75,7 +75,7 @@ Client.on("message", msg => {
     commands.forEach((command) => {
         if (command.name == args[0]) {
             console.log(args[0]);
-            if (command.permission(msg) && (toggle.commandsEnabled || msg.member.roles.cache.some(role => role.name == "Moderador")))
+            if (command.permission(msg, phase.phase()) && (phase.phase() != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);

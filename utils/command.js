@@ -1,4 +1,4 @@
-var args_invalidos = "Uh-oh! Argumentos inválidos!";
+var args_invalidos = "Argumentos inválidos.";
 
 // Exports
 module.exports.args_invalidos = args_invalidos;

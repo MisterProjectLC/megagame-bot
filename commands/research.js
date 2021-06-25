@@ -14,7 +14,7 @@ module.exports = {
         
         log.logCommand(msg, "pesquisa " + com_args[0] + ".", "research", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Pesquisador" || role.name == "Espectador"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Pesquisador" || role.name == "Espectador") && phase == 1,
     command: (com_args, author_id) => {
         db.makeQuery(`INSERT INTO pesquisas SELECT $1, '', jogadores.time_nome FROM jogadores WHERE jogadores.jogador_id = $2`,
                             [com_args[0], author_id]);

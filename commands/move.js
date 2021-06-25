@@ -2,19 +2,40 @@ var args_invalidos = require('../utils/command.js').args_invalidos;
 var db = require('../external/database.js');
 var log = require('./check_log.js');
 
-var isPathValidSea = async (origin, destination, qtd) => {
+var isPathValidSea = async (origin, destination, qtd, author_id) => {
     let retorno = false;
-    await db.makeQuery(`SELECT * FROM frotas, adjacentes 
-    WHERE frotas.território = adjacentes.terA AND adjacentes.terA = $1 AND adjacentes.terB = $2 AND frotas.tamanho >= $3`, 
-    [origin, destination, qtd]).then((response) => {
-        if (response.rows.length > 0)
-            retorno = true;
-    })
+    // Check if there's a clear path
+    await db.makeQuery(`SELECT tera, terb, nação FROM (adjacentes LEFT OUTER JOIN frotas 
+        ON adjacentes.tera = frotas.território) WHERE adjacentes.tera ilike 'O%' AND adjacentes.terb ilike 'O%' 
+        AND (nação IS NULL OR nação = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) OR
+        EXISTS (SELECT nação2 FROM tratados_fronteiras WHERE nação1 = nação AND nação2 = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)))`,
+    [author_id]).then((response) => {
+        let rows = response.rows;
+        let regionsToCheck = [];
+        let regionsChecked = [];
+        regionsToCheck.push(origin);
+
+        // Check this region
+        while (regionsToCheck.length > 0 && !retorno) {
+            console.log(regionsToCheck);
+            // Get adjacencies from this region
+            rows.filter((row) => row.tera == regionsToCheck[0]).forEach((row) => {
+                if (row.terb == destination)
+                    retorno = true;
+                else if (regionsToCheck.indexOf(row.terb) == -1 && regionsChecked.indexOf(row.terb) == -1)
+                    regionsToCheck.push(row.terb);
+            });
+            regionsChecked.push(regionsToCheck[0]);
+            regionsToCheck = regionsToCheck.slice(1);
+        }
+    });
     return retorno;
 }
 
+
 var isPathValidLand = async (origin, destination, qtd, author_id) => {
     let retorno = null;
+    // Check if adjacent
     await db.makeQuery(`SELECT * FROM adjacentes, terrestres
     WHERE terrestres.nome = adjacentes.terA AND adjacentes.terA = $1 AND terrestres.tropas >= $2`,
     [origin, qtd]).then((responser) => {
@@ -35,6 +56,7 @@ var isPathValidLand = async (origin, destination, qtd, author_id) => {
     if (retorno != null)
         return retorno;
 
+    // Check if bridge
     await db.makeQuery(`SELECT * FROM adjacentes, frotas
     WHERE frotas.território = adjacentes.terA AND frotas.nação = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)`,
     [author_id]).then((response) => {
@@ -59,7 +81,7 @@ var isPathValidLand = async (origin, destination, qtd, author_id) => {
                 else if (regionsToCheck.indexOf(row.terb) == -1 && regionsChecked.indexOf(row.terb) == -1)
                     regionsToCheck.push(row.terb);
             });
-            regionsChecked.push(regionsToCheck[0].tera);
+            regionsChecked.push(regionsToCheck[0]);
             regionsToCheck = regionsToCheck.slice(1);
         }
     });
@@ -99,7 +121,7 @@ module.exports = {
                 if (rows[0].isterrestre)
                     await isPathValidLand(com_args[0], com_args[1], tropas, msg.author.id).then(response => {kill = !response;});
                 else
-                    await isPathValidSea(com_args[0], com_args[1], tropas).then(response => {kill = !response;});
+                    await isPathValidSea(com_args[0], com_args[1], tropas, msg.author.id).then(response => {kill = !response;});
             }
         });
         if (kill) {
@@ -110,16 +132,24 @@ module.exports = {
         log.logCommand(msg, "move " + tropas + " tropas de " + com_args[0] + " para " + com_args[1] + ".", 
                         "move", com_args);
     },
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
     command: async (com_args) => {
         let movers = parseInt(com_args[2]);
-        await db.makeQuery("SELECT tropas FROM terrestres WHERE nome = $1", [com_args[0]]).then((response) => {
+        db.makeQuery("SELECT tropas FROM terrestres WHERE nome = $1", [com_args[0]]).then((response) => {
             let rows = response.rows;
             if (rows[0]) {
                 let tropas = parseInt(rows[0].tropas);
-                console.log(movers, tropas, Math.min( tropas, movers ));
                 db.makeQuery("UPDATE terrestres SET tropas = $2 WHERE nome = $1", [com_args[0], Math.max( 0, tropas - movers )]);
                 db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3)", [com_args[0], com_args[1], Math.min( tropas, movers )]);
+            }
+        });
+
+        db.makeQuery("SELECT tamanho FROM frotas WHERE território = $1", [com_args[0]]).then((response) => {
+            let rows = response.rows;
+            if (rows[0]) {
+                let frotas = parseInt(rows[0].tamanho);
+                db.makeQuery("UPDATE frotas SET tamanho = $2 WHERE território = $1", [com_args[0], Math.max( 0, frotas - movers )]);
+                db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3)", [com_args[0], com_args[1], Math.min( frotas, movers )]);
             }
         });
     }

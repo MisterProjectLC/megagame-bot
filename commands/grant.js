@@ -26,7 +26,7 @@ module.exports = {
         log.logCommand(msg, "aloca " + dinheiro + " recursos para " + com_args[0] + ".", 
                         "grant", com_args, dinheiro);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 0,
     command: (com_args) => {
         db.makeQuery(`UPDATE jogadores
         SET recursos = recursos + $1

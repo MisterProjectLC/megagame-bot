@@ -45,7 +45,7 @@ module.exports = {
 
         log.logCommand(msg, "faz um ataque aéreo em " + com_args[0] + ".", "strike", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
     command: (com_args) => {
         if (com_args[0])
             db.makeQuery(`UPDATE terrestres SET tropas = tropas - 1 WHERE nome = $1`, [com_args[0]]);

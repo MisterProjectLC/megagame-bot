@@ -34,7 +34,7 @@ module.exports = {
         log.logCommand(msg, "influencia o slot " + slot + " de " + com_args[0] + ".", 
                         "influence", com_args);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Facção" || role.name == "Espectador"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Facção" || role.name == "Espectador") && phase == 1,
     command: (com_args, author_id) => {
         db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)
          WHERE nome = $2`, [author_id, com_args[0]]);

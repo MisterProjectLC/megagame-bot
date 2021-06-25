@@ -34,7 +34,7 @@ module.exports = {
         log.logCommand(msg, " recruta " + tropas + " tropas em " + com_args[0] + ".", 
                         "recruit", com_args, tropas);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
     command: (com_args) => {
         if (com_args[2])
             db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1 WHERE nome = $2`, [com_args[1], com_args[0]]);

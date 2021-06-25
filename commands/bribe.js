@@ -22,7 +22,7 @@ module.exports = {
         
         await log.logCommand(msg, "gastou " + com_args[0] + " com suborno.", "bribe", com_args, amount);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 1,
     command: (com_args) => {
         console.log(com_args);
     }

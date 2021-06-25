@@ -26,7 +26,7 @@ module.exports = {
         
         log.logCommand(msg, "sobrecarrega " + com_args[0] + ".", "overload", com_args, -1);
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 0,
     command: (com_args) => {
         db.makeQuery(`UPDATE territórios SET poluição = true WHERE nome = $1;`, [com_args[0]]);
     }
