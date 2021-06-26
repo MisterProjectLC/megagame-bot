@@ -6,13 +6,13 @@ const token = '***REMOVED***';
 
 const db = require('./external/database.js');
 const log = require('./commands/check_log.js');
-const phase = require('./commands/set_phase.js');
+const check = require('./commands/set_phase.js');
 
 // Comandos
 const prefix = ">";
 var undefined_msg = "Valor indefinido.";
 const aspas_invalidas = "Aspas inválidas.";
-const perms_invalidos = "Você não tem permissão para usar esse comando agora.";
+const perms_invalidos = "Você não tem permissão para usar esse comando aqui e/ou agora.";
 Client.commands = new Discord.Collection();
 
 // Gera os comandos - créditos para Marcus Vinicius Natrielli Garcia
@@ -72,10 +72,13 @@ Client.on("message", msg => {
 
     // Comando
     const { commands } = msg.client;
-    commands.forEach((command) => {
+    commands.forEach(async (command) => {
         if (command.name == args[0]) {
             console.log(args[0]);
-            if (command.permission(msg, phase.phase()) && (phase.phase() != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
+            let usersChannel = await check.channel(msg.author.id);
+
+            if (command.permission(msg, check.phase()) && msg.channel.id == usersChannel &&
+                (check.phase() != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);

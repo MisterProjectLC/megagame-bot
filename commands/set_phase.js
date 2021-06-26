@@ -1,6 +1,23 @@
+const db = require('../external/database.js');
+
 var phase = 0;
+var channels = {}
 
 const get_phase = () => phase;
+
+const get_channel = async (jogador_id) => {
+    let retorno = '';
+    if (channels[jogador_id])
+        return channels[jogador_id];
+
+    await db.makeQuery(`SELECT canal FROM jogadores WHERE jogador_id = $1`, [jogador_id]).then((result) => {
+        if (result.rows[0]) {
+            channels[jogador_id] = result.rows[0].canal;
+            retorno = result.rows[0].canal;
+        }
+    });
+    return retorno;
+}
 
 // Exports
 module.exports = {
@@ -18,5 +35,6 @@ module.exports = {
         msg.reply("Fase: " + com_args[0]);
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador"),
-    phase: get_phase
+    phase: get_phase,
+    channel: get_channel
 };

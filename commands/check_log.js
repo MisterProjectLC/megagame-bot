@@ -1,6 +1,7 @@
 var db = require('../external/database.js');
 
-priorityList = {"overload":-20,
+priorityList = {"custom":-30,
+                "overload":-20,
                 "grant":-10,
                 "investigate":0,
                 "operation":10,

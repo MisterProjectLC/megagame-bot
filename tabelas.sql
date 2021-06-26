@@ -17,6 +17,16 @@ CREATE TABLE facções (
 	FOREIGN KEY (nome) REFERENCES grupos(nome)
 );
 
+CREATE TABLE jogadores (
+	jogador_id text PRIMARY KEY,
+	username text,
+	recursos int CHECK (recursos >= 0),
+	time_nome varchar(50),
+	cargo varchar(50),
+	canal varchar(100)
+	FOREIGN KEY (time_nome) REFERENCES grupos(nome)
+)
+
 CREATE TABLE jogadoresGrupos (
 	jogador text,
 	grupo varchar(50),
@@ -160,3 +170,16 @@ CREATE TABLE movimentos (
 	FOREIGN KEY (origem) references territórios(nome),
 	FOREIGN KEY (destino) references territórios(nome)
 )
+
+CREATE FUNCTION isHostil(nação_atacante varchar(50), territórioAlvo varchar(3)) RETURNS bool AS $$
+BEGIN
+    RETURN (EXISTS (SELECT * FROM frotas AS nativas WHERE nativas.nação <> nação_atacante AND
+		nativas.território = territórioAlvo AND
+		NOT EXISTS (SELECT * FROM tratados_fronteiras WHERE nação1 = nação_atacante AND nação2 = nativas.nação))
+	OR 
+		EXISTS (SELECT * FROM movimentos AS nativos WHERE nativos.nação <> nação_atacante AND
+		nativos.destino = territórioAlvo AND
+		NOT EXISTS (SELECT * FROM tratados_fronteiras WHERE nação1 = nação_atacante AND nação2 = nativos.nação))
+	);
+END;
+$$ LANGUAGE plpgsql;

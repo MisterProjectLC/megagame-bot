@@ -140,7 +140,8 @@ module.exports = {
             if (rows[0]) {
                 let tropas = parseInt(rows[0].tropas);
                 db.makeQuery("UPDATE terrestres SET tropas = $2 WHERE nome = $1", [com_args[0], Math.max( 0, tropas - movers )]);
-                db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3)", [com_args[0], com_args[1], Math.min( tropas, movers )]);
+                db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3, (SELECT time_nome FROM jogadores WHERE jogador_id = $4))", 
+                [com_args[0], com_args[1], Math.min( tropas, movers ), msg.author.id]);
             }
         });
 
@@ -149,7 +150,8 @@ module.exports = {
             if (rows[0]) {
                 let frotas = parseInt(rows[0].tamanho);
                 db.makeQuery("UPDATE frotas SET tamanho = $2 WHERE território = $1", [com_args[0], Math.max( 0, frotas - movers )]);
-                db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3)", [com_args[0], com_args[1], Math.min( frotas, movers )]);
+                db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3, (SELECT time_nome FROM jogadores WHERE jogador_id = $4))", 
+                [com_args[0], com_args[1], Math.min( frotas, movers ), msg.author.id]);
             }
         });
     }
