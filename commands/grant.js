@@ -1,4 +1,4 @@
-var args_invalidos = require('../utils/command.js').args_invalidos;
+var args_invalidos = require('../data/errors.js').args_invalidos;
 var db = require('../external/database.js');
 var log = require('./check_log.js');
 
@@ -8,7 +8,7 @@ module.exports = {
     description: "grant <pessoa> <quantia>: aloca recursos para a pessoa.", 
     execute: (com_args, msg) => {
         // Check args
-        if (com_args.length < 2 || !msg.mentions.users.first()) {
+        if (com_args.length < 2) {
             msg.reply(args_invalidos);
             return;
         }
@@ -23,15 +23,11 @@ module.exports = {
             }
         }
         
-        log.logCommand(msg, "aloca " + dinheiro + " recursos para " + com_args[0] + ".", 
-                        "grant", com_args, dinheiro);
+        log.logCommand(msg, "aloca " + dinheiro + " recursos para " + com_args[0] + ".", "grant", com_args, dinheiro);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 0,
     command: (com_args) => {
-        db.makeQuery(`UPDATE jogadores
-        SET recursos = recursos + $1
-        WHERE jogador_id = $2;`,
-        [dinheiro, msg.mentions.users.first().id]).then(() => 
-            msg.reply("Pago."));
+        db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = $2;`,
+        [dinheiro, com_args[0]]).then(() => msg.reply("Pago."));
     }
 };

@@ -1,4 +1,4 @@
-var args_invalidos = require('../utils/command.js').args_invalidos;
+var args_invalidos = require('../data/errors.js').args_invalidos;
 var log = require('./check_log.js');
 
 // Exports

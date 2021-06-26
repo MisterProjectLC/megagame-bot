@@ -48,15 +48,18 @@ Client.on("message", msg => {
         else
             args[j] = args[i];
 
-        if (args[i][0] == '"')
-            if (!open) {
-                args[j] = args[i].slice(1, args[i].length);
-                open = true;
-            } else {
-                msg.reply(aspas_invalidas);
-                return;
-            }
-        else if (args[i][args[i].length-1] == '"')
+        if (args[i][0] == '"') {
+            if (args[i][args[i].length-1] != '"')
+                if (!open) {
+                    args[j] = args[i].slice(1, args[i].length);
+                    open = true;
+                } else {
+                    msg.reply(aspas_invalidas);
+                    return;
+                }
+            else
+                args[j] = args[i].slice(1, args[i].length-1);
+        } else if (args[i][args[i].length-1] == '"')
             if (open) {
                 args[j] = args[j].slice(0, args[j].length-1);
                 open = false;

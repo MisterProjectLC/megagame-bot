@@ -65,8 +65,7 @@ module.exports = {
             }
         });
 
-        await Promise.all([promise1, promise2, promise3]);
-        msg.reply("Resolvido. Lembre-se do Bobo e seus parceiros.");
+        Promise.all([promise1, promise2, promise3]).then(() => msg.reply("Resolvido. Lembre-se do Bobo e seus parceiros, nem dos Nômades!!"));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
 };
