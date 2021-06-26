@@ -1,8 +1,16 @@
 ALTER TABLE logs
 ADD COLUMN sucesso boolean DEFAULT true NOT NULL;
 
+CREATE DOMAIN receita_domain AS text
+CHECK (VALUE IN ('Imposto', 'Influência', 'Corporação'));
+
 CREATE TABLE grupos (
-	nome varchar(50) PRIMARY KEY
+	nome varchar(50) PRIMARY KEY,
+	tesoureiro text,
+	receita text NOT NULL DEFAULT "Imposto",
+	ruínas int NOT NULL DEFAULT 0,
+	commodities int NOT NULL DEFAULT 0,
+	FOREIGN KEY (tesoureiro) REFERENCES jogadores(username)
 );
 
 CREATE TABLE nações (
