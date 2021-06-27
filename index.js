@@ -31,20 +31,14 @@ const get_channel = async (jogador_id) => {
 }
 
 const get_phase = (guild) => {
-    let retorno = -1;
-    guild.members.cache.forEach((member) => {
-        if (member.user == Client.user) {
-            member.roles.cache.forEach((role) => {
-                if (role.name.beginsWith("Fase "))
-                    retorno = parseInt(role.name.slice(4));
-            });
-        }
-    });
+    let member = guild.members.cache.find((member) => (member.user == Client.user));
+    if (member) {
+        let role = member.roles.cache.find((role) => role.name.beginsWith("Fase "));
+        if (role)
+            return parseInt(role.name.slice(4));
+    }
 
-    if (retorno === retorno)
-        return retorno;
-    else
-        return -1;
+    return -1;
 }
 
 
