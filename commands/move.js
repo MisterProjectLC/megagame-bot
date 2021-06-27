@@ -130,8 +130,7 @@ module.exports = {
             return;
         }
 
-        log.logCommand(msg, "move " + tropas + " tropas de " + com_args[0] + " para " + com_args[1] + ".", 
-                        "move", com_args);
+        log.logCommand(msg, "move " + tropas + " tropas de " + com_args[0] + " para " + com_args[1] + ".", "move", com_args);
     },
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
     command: async (com_args, author_id) => {

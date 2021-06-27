@@ -33,7 +33,7 @@ const get_channel = async (jogador_id) => {
 const get_phase = (guild) => {
     let member = guild.members.cache.find((member) => (member.user == Client.user));
     if (member) {
-        let role = member.roles.cache.find((role) => role.name.beginsWith("Fase "));
+        let role = member.roles.cache.find((role) => role.name.startsWith("Fase "));
         if (role)
             return parseInt(role.name.slice(4));
     }
