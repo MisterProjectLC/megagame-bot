@@ -6,6 +6,7 @@ const token = '***REMOVED***';
 
 const db = require('./external/database.js');
 const log = require('./commands/check_log.js');
+const phase = require('./utils/phase.js');
 
 // Comandos
 const prefix = ">";
@@ -28,19 +29,6 @@ const get_channel = async (jogador_id) => {
         }
     });
     return retorno;
-}
-
-const get_phase = (guild) => {
-    let member = guild.members.cache.find((member) => (member.user == Client.user));
-    if (member) {
-        let role = member.roles.cache.find((role) => role.name.startsWith("Fase "));
-        if (role) {
-            console.log(parseInt(role.name.slice(4)));
-            return parseInt(role.name.slice(4));
-        }
-    }
-
-    return -1;
 }
 
 
@@ -110,8 +98,8 @@ Client.on("message", msg => {
             console.log(args[0]);
             let usersChannel = await get_channel(msg.author.id);
 
-            if (command.permission(msg, get_phase(msg.guild)) && msg.channel.id == usersChannel &&
-                    (get_phase(msg.guild) != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
+            if (command.permission(msg, phase.get_phase(msg.guild)) && msg.channel.id == usersChannel &&
+                    (phase.get_phase(msg.guild) != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);

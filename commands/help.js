@@ -1,3 +1,5 @@
+const phase = require('./utils/phase.js');
+
 // Exports
 module.exports = {
     name: "help", 
@@ -6,7 +8,7 @@ module.exports = {
         let response = [];
         const { commands } = msg.client;
         commands.forEach((command) => {
-            if (!command.permission(msg))
+            if (!command.permission(msg, phase.get_phase(msg.guild)))
                 return;
 
             if (com_args.length == 0 || command.name == com_args[0])
