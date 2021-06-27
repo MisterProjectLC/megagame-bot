@@ -30,11 +30,15 @@ const get_channel = async (jogador_id) => {
     return retorno;
 }
 
-const get_phase = () => {
+const get_phase = (guild) => {
     let retorno = -1;
-    Client.member.roles.cache.forEach((role) => {
-        if (role.name.beginsWith("Fase "))
-            retorno = parseInt(role.name.slice(4));
+    guild.members.cache.forEach((member) => {
+        if (member.user == Client.user) {
+            member.roles.cache.forEach((role) => {
+                if (role.name.beginsWith("Fase "))
+                    retorno = parseInt(role.name.slice(4));
+            });
+        }
     });
 
     if (retorno === retorno)
@@ -110,8 +114,8 @@ Client.on("message", msg => {
             console.log(args[0]);
             let usersChannel = await get_channel(msg.author.id);
 
-            if (command.permission(msg, get_phase()) && msg.channel.id == usersChannel &&
-                    (get_phase() != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
+            if (command.permission(msg, get_phase(msg.guild)) && msg.channel.id == usersChannel &&
+                    (get_phase(msg.guild) != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);
