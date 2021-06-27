@@ -6,7 +6,6 @@ const token = '***REMOVED***';
 
 const db = require('./external/database.js');
 const log = require('./commands/check_log.js');
-const check = require('./commands/set_phase.js');
 
 // Comandos
 const prefix = ">";
@@ -14,6 +13,37 @@ var undefined_msg = "Valor indefinido.";
 const aspas_invalidas = "Aspas inválidas.";
 const perms_invalidos = "Você não tem permissão para usar esse comando aqui e/ou agora.";
 Client.commands = new Discord.Collection();
+
+
+var channels = {};
+const get_channel = async (jogador_id) => {
+    let retorno = '';
+    if (channels[jogador_id])
+        return channels[jogador_id];
+
+    await db.makeQuery(`SELECT canal FROM jogadores WHERE jogador_id = $1`, [jogador_id]).then((result) => {
+        if (result.rows[0]) {
+            channels[jogador_id] = result.rows[0].canal;
+            retorno = result.rows[0].canal;
+        }
+    });
+    return retorno;
+}
+
+const get_phase = () => {
+    let retorno = -1;
+    Client.member.roles.cache.forEach((role) => {
+        if (role.name.beginsWith("Fase "))
+            retorno = parseInt(role.name.slice(4));
+    });
+
+    if (retorno === retorno)
+        return retorno;
+    else
+        return -1;
+}
+
+
 
 // Gera os comandos - créditos para Marcus Vinicius Natrielli Garcia
 const commandFiles = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
@@ -78,10 +108,10 @@ Client.on("message", msg => {
     commands.forEach(async (command) => {
         if (command.name == args[0]) {
             console.log(args[0]);
-            let usersChannel = await check.channel(msg.author.id);
+            let usersChannel = await get_channel(msg.author.id);
 
-            if (command.permission(msg, check.phase()) && msg.channel.id == usersChannel &&
-                (check.phase() != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
+            if (command.permission(msg, get_phase()) && msg.channel.id == usersChannel &&
+                    (get_phase() != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);
