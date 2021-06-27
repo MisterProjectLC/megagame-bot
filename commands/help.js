@@ -1,4 +1,4 @@
-const phase = require('./utils/phase.js');
+const phase = require('../utils/phase.js');
 
 // Exports
 module.exports = {
