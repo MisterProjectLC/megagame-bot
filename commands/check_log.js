@@ -107,10 +107,10 @@ module.exports = {
     description: "check_log: mostra o log de comandos atual.", 
     execute: async (com_args, msg) => {
         let sql = "", values = [];
-        if (msg.member.roles.cache.some(role => role.name == "Moderador")) {
-            sql = "SELECT * FROM logs WHERE sucesso = $1 ORDER BY prioridade";
-            values = [true];
-        } else {
+        if (msg.member.roles.cache.some(role => role.name == "Moderador"))
+            sql = "SELECT * FROM logs WHERE sucesso = true ORDER BY prioridade";
+        
+        else {
             sql = "SELECT * FROM logs WHERE jogador = $1 ORDER BY idade";
             values = [msg.author.id];
         }

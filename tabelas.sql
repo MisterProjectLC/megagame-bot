@@ -126,8 +126,9 @@ BEGIN
 	IF (EXISTS (SELECT * FROM frotas WHERE frotas.território = NEW.território AND frotas.nação = NEW.nação)) THEN
 		UPDATE frotas SET tamanho = tamanho + NEW.tamanho
 		WHERE frotas.território = NEW.território AND frotas.nação = NEW.nação;
+		RETURN NULL;
 	END IF;
-	RETURN NULL;
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -178,6 +179,23 @@ CREATE TABLE movimentos (
 	FOREIGN KEY (origem) references territórios(nome),
 	FOREIGN KEY (destino) references territórios(nome)
 )
+
+
+CREATE OR REPLACE FUNCTION movements_merge() RETURNS trigger AS $$
+BEGIN
+	IF (EXISTS (SELECT * FROM movimentos WHERE movimentos.destino = NEW.destino AND movimentos.nação = NEW.nação)) THEN
+		UPDATE movimentos SET forças = forças + NEW.forças
+		WHERE movimentos.destino = NEW.destino AND movimentos.nação = NEW.nação;
+		RETURN NULL;
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER detect_movements_merge BEFORE INSERT ON movimentos
+	FOR EACH ROW
+	EXECUTE PROCEDURE movements_merge();
+
 
 CREATE FUNCTION isHostil(nação_atacante varchar(50), territórioAlvo varchar(3)) RETURNS bool AS $$
 BEGIN

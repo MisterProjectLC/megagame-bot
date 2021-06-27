@@ -89,6 +89,7 @@ var isPathValidLand = async (origin, destination, qtd, author_id) => {
     return retorno;
 }
 
+
 // Exports
 module.exports = {
     name: "move", 
@@ -133,7 +134,7 @@ module.exports = {
                         "move", com_args);
     },
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
-    command: async (com_args) => {
+    command: async (com_args, author_id) => {
         let movers = parseInt(com_args[2]);
         db.makeQuery("SELECT tropas FROM terrestres WHERE nome = $1", [com_args[0]]).then((response) => {
             let rows = response.rows;
@@ -141,17 +142,18 @@ module.exports = {
                 let tropas = parseInt(rows[0].tropas);
                 db.makeQuery("UPDATE terrestres SET tropas = $2 WHERE nome = $1", [com_args[0], Math.max( 0, tropas - movers )]);
                 db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3, (SELECT time_nome FROM jogadores WHERE jogador_id = $4))", 
-                [com_args[0], com_args[1], Math.min( tropas, movers ), msg.author.id]);
+                [com_args[0], com_args[1], Math.min( tropas, movers ), author_id]);
             }
         });
 
-        db.makeQuery("SELECT tamanho FROM frotas WHERE território = $1", [com_args[0]]).then((response) => {
+        db.makeQuery("SELECT tamanho FROM frotas WHERE território = $1 AND nação = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)", 
+                    [com_args[0], author_id]).then((response) => {
             let rows = response.rows;
             if (rows[0]) {
                 let frotas = parseInt(rows[0].tamanho);
                 db.makeQuery("UPDATE frotas SET tamanho = $2 WHERE território = $1", [com_args[0], Math.max( 0, frotas - movers )]);
                 db.makeQuery("INSERT INTO movimentos VALUES ($1, $2, $3, (SELECT time_nome FROM jogadores WHERE jogador_id = $4))", 
-                [com_args[0], com_args[1], Math.min( frotas, movers ), msg.author.id]);
+                [com_args[0], com_args[1], Math.min( frotas, movers ), author_id]);
             }
         });
     }

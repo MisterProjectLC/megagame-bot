@@ -1,33 +1,21 @@
 var db = require('../external/database.js');
 
-const invasão = (território, nação, forças) => {
+const reações = (território, atacante) => {
+    let multiplicador = 2;
+
     // Attacked gets angry
-    db.makeQuery(`UPDATE opiniões SET valor = valor - 2 
-    WHERE sujeito = (SELECT nação FROM terrestres WHERE nome = $1) AND objeto = $2`, [território, nação]);
-    db.makeQuery(`UPDATE nações SET lealdade = lealdade - 2 
-    WHERE nome = (SELECT nação FROM terrestres WHERE nome = $1)`, [território]);
+    db.makeQuery(`UPDATE opiniões SET valor = valor - $3 
+    WHERE sujeito = (SELECT nação FROM terrestres WHERE nome = $1) AND 
+    objeto = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)`, [território, atacante, multiplicador]);
+    
+    db.makeQuery(`UPDATE nações SET lealdade = lealdade - $2
+    WHERE nome = (SELECT nação FROM terrestres WHERE nome = $1)`, [território, multiplicador]);
 
     // Attacker reacts
-    db.makeQuery(`UPDATE nações SET lealdade = lealdade - 2*
-    (SELECT valor FROM opiniões WHERE sujeito = (SELECT nação FROM terrestres WHERE nome = $1) AND objeto = $2)
-    WHERE nome = (SELECT nação FROM terrestres WHERE nome = $1)`, [território, nação]);
-
-    // Others react
-    db.makeQuery(`UPDATE opiniões SET valor = valor - 1
-    WHERE objeto = $2 AND sujeito <> (SELECT nação FROM terrestres WHERE nome = $1)
-    AND EXISTS (SELECT * FROM opiniões AS op WHERE opiniões.sujeito = op.sujeito AND op.objeto = (SELECT nação FROM terrestres WHERE nome = $1)
-    AND op.valor > 0)`, 
-    [território, nação]);
-
-    db.makeQuery(`UPDATE opiniões SET valor = valor + 1
-    WHERE objeto = $2 AND sujeito <> (SELECT nação FROM terrestres WHERE nome = $1)
-    AND EXISTS (SELECT * FROM opiniões AS op WHERE opiniões.sujeito = op.sujeito AND op.objeto = (SELECT nação FROM terrestres WHERE nome = $1)
-    AND op.valor < 0)
-    AND EXISTS (SELECT * FROM opiniões AS op WHERE opiniões.sujeito = op.sujeito AND op.objeto = $2 AND op.valor >= 0)`, 
-    [território, nação]);
-
-    // Invasão
-    db.makeQuery(`UPDATE terrestres SET nação = $1, tropas = $2 WHERE nome = $3`, [nação, forças, território]);
+    db.makeQuery(`UPDATE nações SET lealdade = lealdade - $3*
+    (SELECT valor FROM opiniões WHERE sujeito = (SELECT time_nome FROM jogadores WHERE jogador_id = $2) 
+    AND objeto = (SELECT nação FROM terrestres WHERE nome = $1))
+    WHERE nome = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)`, [território, atacante, multiplicador]);
 }
 
 // Exports
@@ -36,7 +24,7 @@ module.exports = {
     description: "resolve_land_movements: resolve todos os movimentos e combates terrestres.",
     execute: async (com_args, msg) => {
         // Only movement
-        await db.makeQuery(`SELECT forças, destino FROM movimentos
+        await db.makeQuery(`SELECT forças, destino FROM movimentos, terrestres
         WHERE movimentos.destino = terrestres.nome AND movimentos.nação = terrestres.nação`).then((result) => {
             let rows = result.rows;
             rows.forEach((row) => {
@@ -46,32 +34,43 @@ module.exports = {
 
 
         // Attacks
-        await db.makeQuery(`SELECT * FROM movimentos, terrestres
+        await db.makeQuery(`SELECT movimentos.nação, tropas, forças, destino FROM movimentos, terrestres
         WHERE movimentos.destino = terrestres.nome AND movimentos.nação <> terrestres.nação
         ORDER BY destino`).then((result) => {
             let rows = result.rows;
 
+            // Each attack
+            for (let i = 0; i < rows.length; i++)
+                reações(rows[i].destino, rows[i].nação)
+
             // Each battle
             for (let i = 0; i < rows.length; i++) {
                 let biggestArmy = i;
-                let j = i+1;
+                let secondBiggest = null;
                 // Finding the biggest army
-                while (rows[j].destino == rows[i].destino) {
-                    if (rows[biggestArmy].forças < rows[i].forças)
+                let j = i+1;
+                while (j < rows.length && rows[j].destino == rows[i].destino) {
+                    if (rows[biggestArmy].forças < rows[i].forças) {
+                        secondBiggest = biggestArmy;
                         biggestArmy = j;
+                    }
                     j++;
                 }
 
+                // Resolve combat
                 let invasoresRestantes = rows[biggestArmy].forças - rows[biggestArmy].tropas;
-                if (invasoresRestantes > 0) {
-                    invasão(rows[biggestArmy].destino, rows[biggestArmy].nação, invasoresRestantes);
-                } else {
-                    db.makeQuery(`UPDATE terrestres SET tropas = $1 WHERE nome = $2`, [-invasoresRestantes, território]);
-                }
+                if (invasoresRestantes > 0) {   // Win attack
+                    if (secondBiggest != null && rows[biggestArmy].tropas < rows[secondBiggest].forças)
+                        invasoresRestantes = rows[biggestArmy].forças - rows[secondBiggest].forças;
+                    db.makeQuery(`UPDATE terrestres SET nação = $1, tropas = $2 WHERE nome = $3`, 
+                                    [rows[biggestArmy].nação, invasoresRestantes, rows[biggestArmy].destino]);
+                
+                } else  // Win defense
+                    db.makeQuery(`UPDATE terrestres SET tropas = $1 WHERE nome = $2`, [-invasoresRestantes, rows[biggestArmy].destino]);
                 i = j-1;
             }
 
-            db.makeQuery('DELETE FROM movimentos WHERE 1 = 1');
+            db.makeQuery(`DELETE FROM movimentos WHERE origem NOT ILIKE 'O%'`);
         });
 
         msg.reply("Resolvido.");

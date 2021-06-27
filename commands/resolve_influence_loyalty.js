@@ -3,7 +3,7 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "resolve_influence_loyalty", 
-    description: "resolve_influence_loyalty: modifica a lealdade de todos as nações baseada em sua influência.",
+    description: "resolve_influence_loyalty: modifica a lealdade de todos as nações baseada nas OPs das facções presentes em seu território.",
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT * FROM opiniões, terrestres WHERE opiniões.sujeito = terrestres.nação 
         AND (opiniões.objeto = terrestres.influência1 OR opiniões.objeto = terrestres.influência2)`).then((result) => {
