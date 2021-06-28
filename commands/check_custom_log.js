@@ -17,10 +17,5 @@ module.exports = {
             for (let i = 0; i < response.length; i += 20)
                 msg.reply(response.slice(i, i+20).join("\n"));
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador"),
-
-    logCommand: logCommand,
-    undoCommand: undoCommand,
-    executeCommand: executeCommand,
-    addToList: addToList
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
 };
