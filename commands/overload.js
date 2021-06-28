@@ -13,7 +13,7 @@ module.exports = {
             return;
         }
 
-        // Checa se território existe
+        // Checa se território existe e não já está poluído
         let kill = false;
         await db.makeQuery('SELECT * FROM territórios WHERE nome = $1 AND poluição = false', [com_args[0]]).then((response) => {
             if (response.rows.length < 1)

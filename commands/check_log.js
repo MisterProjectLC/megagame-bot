@@ -49,7 +49,7 @@ async function logCommand(msg, command, name, args, custo) {
         let result = await db.makeQuery(`SELECT lealdade FROM jogadores, nações WHERE jogador_id = $1 AND time_nome = nações.nome`, [author.id]);
         if (result.rows[0])
             loyalty = parseInt(result.rows[0].lealdade);
-        let success = (Math.floor(Math.random() * 20) <= loyalty);
+        let success = (Math.floor(Math.random() * 21) <= loyalty);
 
         // Log feito
         db.makeQuery("INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso) VALUES ($1, $2, $3, $4, $5, $6, $7)", 

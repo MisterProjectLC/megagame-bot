@@ -7,7 +7,7 @@ module.exports = {
     description: "give_loyalty <nação> <qtd>: dá lealdade para a nação.", 
     execute: (com_args, msg) => {
         // Check args
-        if (com_args.length < 2 || !msg.mentions.users.first()) {
+        if (com_args.length < 2) {
             msg.reply(args_invalidos);
             return;
         }
@@ -19,10 +19,7 @@ module.exports = {
             return;
         }
         
-        db.makeQuery(`UPDATE nações
-        SET lealdade = lealdade + $1
-        WHERE nome = $2;`,
-        [com_args[1], com_args[0]]).then(() => 
+        db.makeQuery(`UPDATE nações SET lealdade = lealdade + $1 WHERE nome = $2;`, [com_args[1], com_args[0]]).then(() => 
             msg.reply("Pago."));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
