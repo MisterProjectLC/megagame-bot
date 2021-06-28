@@ -7,8 +7,9 @@ module.exports = {
     execute: (com_args, msg) => {
         let response = [];
         const { commands } = msg.client;
+        let currPhase = phase.get_phase(msg.guild);
         commands.forEach((command) => {
-            if (!command.permission(msg, phase.get_phase(msg.guild)))
+            if (!command.permission(msg, currPhase))
                 return;
 
             if (com_args.length == 0 || command.name == com_args[0])

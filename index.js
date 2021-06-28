@@ -98,8 +98,9 @@ Client.on("message", msg => {
             console.log(args[0]);
             let usersChannel = await get_channel(msg.author.id);
 
-            if (command.permission(msg, phase.get_phase(msg.guild)) && msg.channel.id == usersChannel &&
-                    (phase.get_phase(msg.guild) != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
+            let currentPhase = phase.get_phase(msg.guild);
+            if (command.permission(msg, currentPhase) && msg.channel.id == usersChannel &&
+                    (currentPhase != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);
             else
                 msg.reply(perms_invalidos);
