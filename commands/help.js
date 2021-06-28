@@ -9,8 +9,6 @@ module.exports = {
         const { commands } = msg.client;
         let currPhase = phase.get_phase(msg.guild);
         commands.forEach((command) => {
-            console.log(msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1);
-            console.log(currPhase);
             if (!command.permission(msg, currPhase))
                 return;
 
