@@ -116,12 +116,14 @@ module.exports = {
         }
         let logs = await db.makeQuery(sql, values);
 
-        let response = "";
-        logs.rows.forEach(command => {response += command.comando + "\n"});
-        if (response == "")
+        let response = [];
+        logs.rows.forEach(command => {response.push(command.comando)});
+
+        if (response.length == 0)
             msg.reply("log vazio.");
         else
-            msg.reply(response);
+            for (let i = 0; i < response.length; i += 20)
+                msg.reply(response.slice(i, i+20).join("\n"));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador"),
 
