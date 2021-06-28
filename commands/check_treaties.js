@@ -3,7 +3,7 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "check_treaties", 
-    description: "check_treaties: mostra as especializações e tecnologias da sua nação.", 
+    description: "check_treaties: mostra os tratados da sua nação DESTE TURNO.", 
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT *
         FROM tratados_fronteiras, jogadores
