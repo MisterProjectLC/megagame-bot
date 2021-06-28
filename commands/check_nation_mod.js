@@ -10,9 +10,9 @@ module.exports = {
             return;
         }
 
-        await db.makeQuery(`SELECT lealdade, time_nome, objeto, valor 
+        await db.makeQuery(`SELECT lealdade, objeto, valor, nome
         FROM nações, opiniões WHERE nações.nome = $1 AND nações.nome = opiniões.sujeito`, [com_args[0]]).then((result) => {
-            let response = "Nação: " + result.rows[0].time_nome + "\nLealdade: " + result.rows[0].lealdade + "\nOpiniões Públicas:\n";
+            let response = "Nação: " + result.rows[0].nome + "\nLealdade: " + result.rows[0].lealdade + "\nOpiniões Públicas:\n";
             result.rows.forEach((row) => {
                 response += row.objeto + ": " + row.valor + "\n";
             });
