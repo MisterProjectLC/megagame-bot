@@ -11,7 +11,7 @@ module.exports = {
         }
 
         await db.makeQuery(`SELECT lealdade, objeto, valor, nome
-        FROM nações, opiniões WHERE nações.nome = $1 AND nações.nome = opiniões.sujeito`, [com_args[0]]).then((result) => {
+        FROM nações, opiniões WHERE nações.nome = $1 AND nações.nome = opiniões.sujeito ORDER BY valor`, [com_args[0]]).then((result) => {
             let response = "Nação: " + result.rows[0].nome + "\nLealdade: " + result.rows[0].lealdade + "\nOpiniões Públicas:\n";
             result.rows.forEach((row) => {
                 response += row.objeto + ": " + row.valor + "\n";
