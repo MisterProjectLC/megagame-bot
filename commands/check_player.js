@@ -11,7 +11,7 @@ module.exports = {
             return;
         }
 
-        await db.makeQuery(`SELECT * FROM jogadores WHERE $1 = cargo`).then((response) => {
+        await db.makeQuery(`SELECT * FROM jogadores WHERE $1 = cargo`, [com_args[0]]).then((response) => {
             let thisJogador = response.rows[0];
             if (!thisJogador)
                 msg.reply("Esse personagem não existe.");
