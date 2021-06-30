@@ -1,5 +1,5 @@
 var db = require('../external/database.js');
-var areas = require('../data/research_areas.js');
+var areas = require('../data/research_areas.json');
 
 // Exports
 module.exports = {
