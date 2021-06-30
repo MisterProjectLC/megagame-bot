@@ -31,8 +31,7 @@ module.exports = {
             return;
         }
         
-        log.logCommand(msg, "influencia o slot " + slot + " de " + com_args[0] + ".", 
-                        "influence", com_args);
+        log.logCommand(msg, "influencia o slot " + slot + " de " + com_args[0] + ".", "influence", com_args);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Facção" || role.name == "Espectador") && phase == 1,
     command: (com_args, author_id) => {

@@ -1,4 +1,5 @@
 var db = require('../external/database.js');
+var areas = require('../data/research_areas.js');
 
 // Exports
 module.exports = {
@@ -11,12 +12,13 @@ module.exports = {
         [msg.author.id]).then((result) => {
             let response = "";
             result.rows.forEach((row) => {
-                if (row.descrição == '')
-                    response += "Especialização - " + row.nome + "\n";
+                if (row.descrição in areas)
+                    response += "Especialização - " + row.nome + ", Área: " + row.descrição + "\n";
                 else
                     response += "Tecnologia - " + row.nome + ": " + row.descrição + "\n";
             });
 
+            
             if (response == '')
                 msg.reply('nenhuma pesquisa encontrada.')
             else
