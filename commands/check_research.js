@@ -12,7 +12,7 @@ module.exports = {
         [msg.author.id]).then((result) => {
             let response = "";
             result.rows.forEach((row) => {
-                if (row.descrição in areas)
+                if (areas.indexOf(row.descrição) != -1)
                     response += "Especialização - " + row.nome + ", Área: " + row.descrição + "\n";
                 else
                     response += "Tecnologia - " + row.nome + ": " + row.descrição + "\n";

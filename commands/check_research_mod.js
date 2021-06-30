@@ -14,7 +14,7 @@ module.exports = {
         await db.makeQuery(`SELECT nome, descrição FROM pesquisas WHERE $1 = pesquisas.grupo`, [com_args[0]]).then((result) => {
             let response = "";
             result.rows.forEach((row) => {
-                if (row.descrição in areas)
+                if (areas.indexOf(row.descrição) != -1)
                     response += "Especialização - " + row.nome + ", Área: " + row.descrição + "\n";
                 else
                     response += "Tecnologia - " + row.nome + ": " + row.descrição + "\n";
