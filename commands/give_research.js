@@ -1,6 +1,6 @@
 var args_invalidos = require('../data/errors.js').args_invalidos;
 var db = require('../external/database.js');
-import * as areas from '../data/research_areas.json';
+var areas = require('../data/research_areas.json').areas;
 
 // Exports
 module.exports = {
