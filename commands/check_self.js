@@ -3,7 +3,7 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "check_self", 
-    description: "check_self: checa seu próprio personagem.", 
+    description: "check_self: checa seu próprio personagem e sua quantidade de recursos atual.", 
     execute: async (com_args, msg) => {
         await db.getPlayer(msg.author.id).then((response) => {
             let thisJogador = response.rows[0];
