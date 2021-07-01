@@ -25,7 +25,10 @@ module.exports = {
         
         db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = $2;`,
         [dinheiro, com_args[0]]).then((res) => {
-            console.log(res);
+            if (res.rowCount == 1)
+                msg.reply("Pago com sucesso.");
+            else
+                msg.reply(args_invalidos);
         });
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 0
