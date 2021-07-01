@@ -34,5 +34,5 @@ module.exports = {
             msg.reply(response);
         });
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Militar")
 };
