@@ -52,6 +52,22 @@ CREATE TABLE opiniões (
 	FOREIGN KEY (objeto) REFERENCES grupos(nome)
 );
 
+CREATE OR REPLACE FUNCTION nagamitsu_opinion() RETURNS trigger AS $$
+BEGIN
+	IF NEW.objeto = 'Nagamitsu' THEN
+		UPDATE opiniões SET valor = valor + (NEW.valor - OLD.valor) 
+		WHERE sujeito = NEW.sujeito AND objeto = 'Naga';
+		UPDATE opiniões SET valor = valor + (NEW.valor - OLD.valor) 
+		WHERE sujeito = NEW.sujeito AND objeto = 'Mitsu';
+	END IF;
+	RETURN new;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_nagamitsu_opinion AFTER UPDATE ON opiniões
+	FOR EACH ROW
+	EXECUTE PROCEDURE nagamitsu_opinion();
+
 CREATE TABLE tratados_fronteiras (
 	nação1 varchar(50),
 	nação2 varchar(50),

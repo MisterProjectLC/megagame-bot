@@ -31,5 +31,5 @@ module.exports = {
                 msg.reply(args_invalidos);
         });
     }, 
-    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 0
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado")
 };
