@@ -7,7 +7,7 @@ module.exports = {
     name: "give_research", 
     description: "give_research <especialização> <área> <publicador> <nação>: dá especialização do publicador para a nação.", 
     min: 4, max: 4,
-    execute: (com_args, msg) => {
+    execute: async (com_args, msg) => {
         // Check args
         if (com_args.length < 4 || !(com_args[1] in areas)) {
             msg.reply(args_invalidos);
