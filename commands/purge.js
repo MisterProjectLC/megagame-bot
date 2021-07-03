@@ -16,7 +16,7 @@ module.exports = {
 
         // Checa slot
         let slot = parseInt(com_args[1]);
-        if (slot !== slot || slot <= 0 || slot >= 2) {
+        if (slot !== slot || slot <= 0 || slot > 2) {
             msg.reply(args_invalidos);
             return;
         }
