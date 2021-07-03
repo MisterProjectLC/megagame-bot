@@ -97,13 +97,12 @@ Client.on("message", msg => {
     const { commands } = msg.client;
     commands.forEach(async (command) => {
         if (command.name == args[0]) {
-            console.log(args[0]);
+            console.log(args);
             args = args.slice(1);
             let usersChannel = await get_channel(msg.author.id);
 
             let currentPhase = phase.get_phase(msg.guild);
             if (command.min && command.max && !(command.min <= args.length && args.length <= command.max)) {
-                console.log(command.min, command.max, args);
                 msg.reply(args_invalidos);
                 return;
             }

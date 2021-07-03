@@ -9,8 +9,8 @@ module.exports = {
     min: 2, max: 3,
     execute: (com_args, msg) => {
         // Check args
-        if (com_args.length < 2 || areas.indexOf(com_args[1]) == -1) {
-            msg.reply(args_invalidos);
+        if (areas.indexOf(com_args[1]) == -1) {
+            msg.reply("Área inválida!");
             return;
         }
 

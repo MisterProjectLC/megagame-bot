@@ -9,13 +9,13 @@ module.exports = {
     min: 4, max: 4,
     execute: async (com_args, msg) => {
         // Check args
-        if (com_args.length < 4 || areas.indexOf(com_args[1]) == -1) {
-            msg.reply(args_invalidos);
+        if (areas.indexOf(com_args[1]) == -1) {
+            msg.reply("Área inválida!");
             return;
         }
 
         await db.makeQuery(`INSERT INTO pesquisas VALUES ($1, $2, $3)`,
-            [com_args[0], com_args[1], com_args[2]]).then(() => {
+            [com_args[0], com_args[1], com_args[3]]).then(() => {
                 db.makeQuery(`UPDATE opiniões SET valor = valor + 1 WHERE sujeito = $2 AND objeto = $1`,
                         [com_args[2], com_args[3]]).then(() => msg.reply("Dado."), () => msg.reply(args_invalidos));
             }, 
