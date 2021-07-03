@@ -3,7 +3,8 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "check_trades", 
-    description: "check_trades: mostra todas os comandos de troca deste turno.",
+    description: "check_trades: mostra todas os comandos de troca deste turno.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Ar
         let nação = '';

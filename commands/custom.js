@@ -6,6 +6,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "custom", 
     description: "custom <ordem>: faz um comando especial. Serve para ordens que não encaixam em nenhum outro comando", 
+    min: 1, max: 1,
     execute: (com_args, msg) => {
         if (com_args.length < 1) {
             msg.reply(args_invalidos);

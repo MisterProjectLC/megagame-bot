@@ -5,6 +5,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "unregister", 
     description: "unregister <título>: remove um jogador.", 
+    min: 1, max: 1,
     execute: (com_args, msg) => {
         if (com_args.length < 1) {
             msg.reply(args_invalidos);

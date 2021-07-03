@@ -5,6 +5,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "check_custom_log", 
     description: "check_custom_log: mostra o log de comandos atual.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         let logs = await db.makeQuery(`SELECT * FROM logs WHERE sucesso = true AND nome = 'custom' ORDER BY prioridade`, );
 

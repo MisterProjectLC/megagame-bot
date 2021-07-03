@@ -4,6 +4,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "check_treaties", 
     description: "check_treaties: mostra os tratados da sua nação DESTE TURNO.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT *
         FROM tratados_fronteiras, jogadores

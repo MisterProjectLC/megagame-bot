@@ -6,6 +6,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "grant", 
     description: "grant <cargo> <quantia>: aloca recursos para a pessoa com o cargo especificado.", 
+    min: 2, max: 2,
     execute: async (com_args, msg) => {
         // Check args
         if (com_args.length < 2) {

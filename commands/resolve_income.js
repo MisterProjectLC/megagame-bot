@@ -26,7 +26,8 @@ const distribuirRecursos = (rows) => {
 // Exports
 module.exports = {
     name: "resolve_income", 
-    description: "resolve_income: dá recursos para todos os grupos baseado em seus territórios/presença.",
+    description: "resolve_income: dá recursos para todos os grupos baseado em seus territórios/presença.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         const promise1 = db.makeQuery(`SELECT grupos.nome, recurso FROM grupos, terrestres 
         WHERE grupos.nome = terrestres.nação AND grupos.receita = 'Imposto'`).then((result) => {

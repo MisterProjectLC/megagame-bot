@@ -5,6 +5,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "loyalty_action", 
     description: "loyalty_action <nação> <grupo> [multiplicador]: aplica uma ação de lealdade da nação contra o grupo.", 
+    min: 2, max: 3,
     execute: (com_args, msg) => {
         if (com_args.length < 2) {
             msg.reply(args_invalidos);

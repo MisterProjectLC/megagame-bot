@@ -6,6 +6,7 @@ var areas = require('../data/research_areas.json').areas;
 module.exports = {
     name: "give_research", 
     description: "give_research <especialização> <área> [grupo]: dá especialização para o grupo (ou todos os grupos).", 
+    min: 2, max: 3,
     execute: (com_args, msg) => {
         // Check args
         if (com_args.length < 2 || !(com_args[1] in areas)) {

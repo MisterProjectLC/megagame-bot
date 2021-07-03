@@ -5,6 +5,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "check_territory", 
     description: "check_territory <território>: mostra a lista de territórios adjacentes do alvo.", 
+    min: 1, max: 1,
     execute: async (com_args, msg) => {
         if (com_args.length < 1) {
             msg.reply(args_invalidos);

@@ -18,7 +18,8 @@ const modificação = (atacado, atacante) => {
 // Exports
 module.exports = {
     name: "resolve_conflict_opinion", 
-    description: "resolve_conflict_opinion <atacante> <atacado>: modifica as OPs de todos após um ataque de uma nação contra outra nação.",
+    description: "resolve_conflict_opinion <atacante> <atacado>: modifica as OPs de todos após um ataque de uma nação contra outra nação.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Args
         if (com_args.length < 2) {

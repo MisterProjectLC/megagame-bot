@@ -6,6 +6,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "purge", 
     description: "purge <território> <slot(1/2)>: remove a influência do slot escolhido.", 
+    min: 2, max: 2,
     execute: async (com_args, msg) => {
         // Args
         if (com_args.length < 2) {

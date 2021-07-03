@@ -7,6 +7,7 @@ var areas = require('../data/research_areas.json').areas;
 module.exports = {
     name: "research", 
     description: "research <especialização> <área>: faz pesquisa PURA em uma especialização. A área pode ser Exatas, Biológicas ou Humanas.", 
+    min: 2, max: 2, 
     execute: (com_args, msg) => {
         if (com_args.length < 2 || !(com_args[1] in areas)) {
             msg.reply(args_invalidos);

@@ -5,6 +5,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "give_resources", 
     description: "give_resources <pessoa> <qtd>: dá recursos para a pessoa.", 
+    min: 2, max: 2,
     execute: (com_args, msg) => {
         // Check args
         if (com_args.length < 2) {

@@ -21,7 +21,8 @@ const reações = (território, atacante) => {
 // Exports
 module.exports = {
     name: "resolve_land_movements", 
-    description: "resolve_land_movements: resolve todos os movimentos e combates terrestres.",
+    description: "resolve_land_movements: resolve todos os movimentos e combates terrestres.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Only movement
         await db.makeQuery(`SELECT forças, destino FROM movimentos, terrestres

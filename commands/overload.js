@@ -6,13 +6,8 @@ var log = require('./check_log.js');
 module.exports = {
     name: "overload", 
     description: "overload <território>: sobrecarrega um território, causando poluição mas produzindo 1 Economia.", 
+    min: 1, max: 1,
     execute: async (com_args, msg) => {
-        // Check args
-        if (com_args.length < 1) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         // Checa se território existe e não já está poluído
         let kill = false;
         await db.makeQuery('SELECT * FROM territórios WHERE nome = $1 AND poluição = false', [com_args[0]]).then((response) => {

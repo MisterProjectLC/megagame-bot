@@ -3,7 +3,8 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "check_player", 
-    description: "check_player <cargo>: checa o personagem com o cargo selecionado.",
+    description: "check_player <cargo>: checa o personagem com o cargo selecionado.", 
+    min: 1, max: 1,
     execute: async (com_args, msg) => {
         if (com_args < 1)
         if (com_args.length < 1) {

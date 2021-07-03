@@ -7,6 +7,7 @@ const token = '***REMOVED***';
 const db = require('./external/database.js');
 const log = require('./commands/check_log.js');
 const phase = require('./utils/phase.js');
+const args_invalidos = require('./data/errors.js').args_invalidos;
 
 // Comandos
 const prefix = ">";
@@ -99,6 +100,11 @@ Client.on("message", msg => {
             let usersChannel = await get_channel(msg.author.id);
 
             let currentPhase = phase.get_phase(msg.guild);
+            if (command.min && command.max && !(command.min <= args.length && args.length <= command.max)) {
+                msg.reply(args_invalidos);
+                return;
+            }
+
             if (command.permission(msg, currentPhase) && msg.channel.id == usersChannel &&
                     (currentPhase != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
                 command.execute(args.slice(1, j), msg);

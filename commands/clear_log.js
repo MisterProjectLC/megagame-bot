@@ -4,6 +4,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "clear_log", 
     description: "clear_log: limpa todos os logs do jogo.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Terra
         await db.makeQuery(`DELETE FROM logs WHERE comando != ''`).then(() => {

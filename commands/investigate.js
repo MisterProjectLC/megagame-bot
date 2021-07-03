@@ -4,9 +4,17 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "investigate", 
-    description: "investigate <alvo> <tipo-espionagem>: investiga alvo com a técnica dada.", 
-    execute: (com_args, msg) => {
+    description: "investigate <alvo> <tipo-espionagem>: investiga alvo (cargo de jogador OU nome de grupo) com a técnica dada.",
+    min: 2, max: 2,
+    execute: async (com_args, msg) => {
         if (com_args.length < 2) {
+            msg.reply(args_invalidos);
+            return;
+        }
+
+        // Checa alvo
+        let result = await db.makeQuery(`SELECT time_nome FROM jogadores, grupos WHERE jogadores.cargo = $1 OR grupos.nome = $1`, [com_args[0]]);
+        if (!result.rows[0]) {
             msg.reply(args_invalidos);
             return;
         }

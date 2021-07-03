@@ -4,6 +4,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "check_ruins", 
     description: "check_ruins: mostra a quantidade de ruínas da sua nação/facção.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT ruínas
         FROM grupos, jogadores

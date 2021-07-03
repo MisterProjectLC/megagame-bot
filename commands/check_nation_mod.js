@@ -3,7 +3,8 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "check_nation_mod", 
-    description: "check_nation_mod <nação>: mostra a Lealdade e Opiniões Públicas da nação escolhida.", 
+    description: "check_nation_mod <nação>: mostra a Lealdade e Opiniões Públicas da nação escolhida.",  
+    min: 1, max: 1,
     execute: async (com_args, msg) => {
         if (com_args.length < 1) {
             msg.reply(args_invalidos);

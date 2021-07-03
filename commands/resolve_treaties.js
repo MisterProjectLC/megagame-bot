@@ -3,7 +3,8 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "resolve_treaties", 
-    description: "resolve_treaties: gera os tratados para este turno.",
+    description: "resolve_treaties: gera os tratados para este turno.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Ar
         let nação = '';

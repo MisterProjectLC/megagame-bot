@@ -4,6 +4,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "check_commodities", 
     description: "check_commodities: mostra a quantidade de commodities da sua nação/facção.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT commodities
         FROM grupos, jogadores

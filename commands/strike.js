@@ -5,7 +5,8 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "strike", 
-    description: "strike <território>: faz um ataque aéreo contra o território", 
+    description: "strike <território>: faz um ataque aéreo contra o território",  
+    min: 1, max: 1,
     execute: async (com_args, msg) => {
         if (com_args.length < 1) {
             msg.reply(args_invalidos);

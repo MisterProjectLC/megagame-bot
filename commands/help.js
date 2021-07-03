@@ -4,6 +4,7 @@ const phase = require('../utils/phase.js');
 module.exports = {
     name: "help", 
     description: "help [comando]: Explica a sintaxe de um comando. Se nenhum comando for dado, explica todos.", 
+    min: 0, max: 1,
     execute: (com_args, msg) => {
         let response = [];
         const { commands } = msg.client;

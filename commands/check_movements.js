@@ -4,6 +4,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "check_movements", 
     description: "check_movements: mostra todas os movimentos no jogo.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Terra
         await db.makeQuery(`SELECT * FROM movimentos ORDER BY destino`).then((result) => {

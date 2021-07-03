@@ -5,6 +5,7 @@ var areas = require('../data/research_areas.json').areas;
 module.exports = {
     name: "check_research_mod", 
     description: "check_research_mod <grupo>: mostra as especializações e tecnologias do grupo selecionado.", 
+    min: 1, max: 1,
     execute: async (com_args, msg) => {
         if (com_args.length < 1) {
             msg.reply(args_invalidos);

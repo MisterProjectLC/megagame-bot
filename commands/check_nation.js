@@ -3,7 +3,8 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "check_nation", 
-    description: "check_nation: mostra a Lealdade e Opiniões Públicas da sua nação.", 
+    description: "check_nation: mostra a Lealdade e Opiniões Públicas da sua nação.",  
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT lealdade, time_nome, objeto, valor 
         FROM nações, opiniões, jogadores

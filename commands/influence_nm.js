@@ -6,6 +6,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "influence_nm", 
     description: "influence_nm <Naga/Mitsu> <território> <slot(1/2)>: coloca influência Naga ou Mitsu no slot escolhido.", 
+    min: 3, max: 3,
     execute: async (com_args, msg) => {
         // Args
         if (com_args.length < 3) {

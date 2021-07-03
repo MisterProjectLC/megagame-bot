@@ -5,12 +5,8 @@ var db = require('../external/database.js');
 module.exports = {
     name: "propaganda", 
     description: "propaganda <alvo> <delta>: gasta Economia para modificar a OP da nação em relação ao alvo.", 
+    min: 2, max: 2, 
     execute: (com_args, msg) => {
-        if (com_args.length < 1) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         let delta = parseInt(com_args[0]);
         if (delta !== delta) {
             msg.reply(args_invalidos);

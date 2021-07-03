@@ -6,6 +6,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "bribe", 
     description: "bribe <amount>: gasta Economia para melhorar a Lealdade.", 
+    min: 1, max: 1, 
     execute: async (com_args, msg) => {
         // Args
         if (com_args.length < 1) {

@@ -5,6 +5,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "give_loyalty", 
     description: "give_loyalty <nação> <qtd>: dá lealdade para a nação.", 
+    min: 2, max: 2,
     execute: (com_args, msg) => {
         // Check args
         if (com_args.length < 2) {

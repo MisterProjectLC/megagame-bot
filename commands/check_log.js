@@ -105,6 +105,7 @@ async function executeCommand(msg, n, execute) {
 module.exports = {
     name: "check_log", 
     description: "check_log: mostra o log de comandos atual.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         let sql = "", values = [];
         if (msg.member.roles.cache.some(role => role.name == "Moderador"))

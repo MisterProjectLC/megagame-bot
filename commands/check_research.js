@@ -5,6 +5,7 @@ var areas = require('../data/research_areas.json').areas;
 module.exports = {
     name: "check_research", 
     description: "check_research: mostra as especializações e tecnologias da sua nação.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT nome, descrição FROM pesquisas, jogadores
         WHERE jogadores.jogador_id = $1 AND jogadores.time_nome = pesquisas.grupo ORDER BY descrição`,

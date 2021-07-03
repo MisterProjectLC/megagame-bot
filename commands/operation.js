@@ -5,6 +5,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "operation", 
     description: "operation <alvo> <descrição>: lança operação contra alvo.", 
+    min: 2, max: 2,
     execute: (com_args, msg) => {
         if (com_args.length < 2) {
             msg.reply(args_invalidos);

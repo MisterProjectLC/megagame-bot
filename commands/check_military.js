@@ -4,6 +4,7 @@ var db = require('../external/database.js');
 module.exports = {
     name: "check_military", 
     description: "check_military: mostra todas as tropas, frotas e esquadrões da sua nação.", 
+    min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Ar
         let nação = '';

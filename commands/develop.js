@@ -7,6 +7,7 @@ module.exports = {
     name: "develop", 
     description: `develop <tecnologia> <especializações> <explicação>: faz pesquisa APLICADA. Exemplo:
 develop "Teoria dos Memes" "Virologia, Sociologia" "Teoria de como ideias se espalham como vírus. Com isso, posso influenciar 2 slots ao invés de 1."`, 
+    min: 3, max: 3, 
     execute: async (com_args, msg) => {
         if (com_args.length < 3) {
             msg.reply(args_invalidos);

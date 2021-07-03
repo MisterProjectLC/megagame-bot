@@ -6,6 +6,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "opinion", 
     description: `opinion <grupo> [delta] [juiz]: modifica a opinião de outros contra o grupo especificado.`, 
+    min: 1, max: 3,
     execute: async (com_args, msg) => {
         let kill = false;
         if (com_args.length < 1) {
