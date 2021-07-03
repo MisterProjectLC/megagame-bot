@@ -4,8 +4,8 @@ var areas = require('../data/research_areas.json').areas;
 
 // Exports
 module.exports = {
-    name: "give_research", 
-    description: "give_research <especialização> <área> <publicador> <nação>: dá especialização do publicador para a nação.", 
+    name: "grant_research", 
+    description: "grant_research <especialização> <área> <publicador> <nação>: dá especialização do publicador para a nação.", 
     min: 4, max: 4,
     execute: async (com_args, msg) => {
         // Check args
