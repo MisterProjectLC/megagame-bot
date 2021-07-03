@@ -9,7 +9,7 @@ module.exports = {
     description: "research <especialização> <área>: faz pesquisa PURA em uma especialização. A área pode ser Exatas, Biológicas ou Humanas.", 
     min: 2, max: 2, 
     execute: (com_args, msg) => {
-        if (com_args.length < 2 || !(com_args[1] in areas)) {
+        if (com_args.length < 2 || areas.indexOf(com_args[1]) == -1) {
             msg.reply(args_invalidos);
             return;
         }

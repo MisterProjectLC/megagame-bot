@@ -8,15 +8,9 @@ module.exports = {
     description: "influence <território> <slot(1/2)>: coloca sua influência no slot escolhido.", 
     min: 2, max: 2,
     execute: async (com_args, msg) => {
-        // Args
-        if (com_args.length < 2) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         // Checa slot
         let slot = parseInt(com_args[1]);
-        if (slot !== slot || slot <= 0 || slot >= 2) {
+        if (slot !== slot || slot <= 0 || slot > 2) {
             msg.reply(args_invalidos);
             return;
         }
