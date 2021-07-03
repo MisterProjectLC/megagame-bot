@@ -91,7 +91,7 @@ Client.on("message", msg => {
             j++;
         }
 
-        args = args.slice(0, j);
+        args = args.slice(0, j+1);
     }
 
     // Comando
