@@ -102,6 +102,7 @@ Client.on("message", msg => {
 
             let currentPhase = phase.get_phase(msg.guild);
             if (command.min && command.max && !(command.min <= args.length && args.length <= command.max)) {
+                console.log(command.min, command.max, args);
                 msg.reply(args_invalidos);
                 return;
             }
