@@ -90,9 +90,8 @@ Client.on("message", msg => {
         if (!open) {
             j++;
         }
-
-        args = args.slice(0, j+1);
     }
+    args = args.slice(0, j);
 
     // Comando
     const { commands } = msg.client;
