@@ -9,7 +9,7 @@ module.exports = {
     min: 4, max: 4,
     execute: async (com_args, msg) => {
         // Check args
-        if (com_args.length < 4 || !(com_args[1] in areas)) {
+        if (com_args.length < 4 || areas.indexOf(com_args[1]) == -1) {
             msg.reply(args_invalidos);
             return;
         }
