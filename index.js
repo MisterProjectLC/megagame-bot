@@ -90,6 +90,8 @@ Client.on("message", msg => {
         if (!open) {
             j++;
         }
+
+        args = args.slice(0, j);
     }
 
     // Comando
