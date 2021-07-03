@@ -14,7 +14,7 @@ develop "Teoria dos Memes" "Virologia, Sociologia" "Teoria de como ideias se esp
             return;
         }
         
-        await log.logCommand(msg, "desenvolve " + com_args[0] + ", usando " + com_args[1] + ". Explicação: " + com_args[2], "develop", com_args);
+        await log.logCommand(msg, "desenvolve " + com_args[0] + ", usando " + com_args[1] + ". Explicação: " + com_args[2], "develop", com_args, 1);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Pesquisador") && phase == 1,
     command: (com_args, author_id) => {

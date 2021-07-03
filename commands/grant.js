@@ -8,12 +8,6 @@ module.exports = {
     description: "grant <cargo> <quantia>: aloca recursos para a pessoa com o cargo especificado.", 
     min: 2, max: 2,
     execute: async (com_args, msg) => {
-        // Check args
-        if (com_args.length < 2) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         // Checar quantia
         let dinheiro = 1;
         if (com_args.length >= 2) {
@@ -23,12 +17,24 @@ module.exports = {
                 return;
             }
         }
+
+        let banco = 0, kill = false;
+        await db.makeQuery(`SELECT recursos FROM jogadores WHERE jogador_id = $1;`, [msg.author.id]).then((response) => {
+            if (!response.rows[0] || response.rows[0].recursos < dinheiro) {
+                kill = true;
+                return;
+            }
+        });
+        if (kill) {
+            msg.reply("Recursos insuficientes!");
+            return;
+        }
         
-        db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = $2;`,
-        [dinheiro, com_args[0]]).then((res) => {
-            if (res.rowCount == 1)
+        db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = $2;`, [dinheiro, com_args[0]]).then((res) => {
+            if (res.rowCount == 1) {
+                db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2;`, [dinheiro, msg.author.id]);
                 msg.reply("Pago com sucesso.");
-            else
+            } else
                 msg.reply(args_invalidos);
         });
     }, 

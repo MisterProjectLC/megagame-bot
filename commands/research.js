@@ -14,7 +14,7 @@ module.exports = {
             return;
         }
         
-        log.logCommand(msg, "pesquisa " + com_args[0] + " na área " + com_args[1] + ".", "research", com_args);
+        log.logCommand(msg, "pesquisa " + com_args[0] + " na área " + com_args[1] + ".", "research", com_args, 1);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Pesquisador" || role.name == "Espectador") && phase == 1,
     command: (com_args, author_id) => {
