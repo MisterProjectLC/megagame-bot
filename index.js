@@ -67,8 +67,8 @@ Client.on("message", msg => {
         else
             args[j] = args[i];
 
-        if (args[i][0] == '"') {
-            if (args[i][args[i].length-1] != '"')
+        if (args[i][0] == '"' || args[i][0] == '“') {
+            if (args[i][args[i].length-1] != '"' && args[i][args[i].length-1] != '“')
                 if (!open) {
                     args[j] = args[i].slice(1, args[i].length);
                     open = true;
@@ -78,7 +78,7 @@ Client.on("message", msg => {
                 }
             else
                 args[j] = args[i].slice(1, args[i].length-1);
-        } else if (args[i][args[i].length-1] == '"')
+        } else if (args[i][args[i].length-1] == '"' || args[i][args[i].length-1] == '“')
             if (open) {
                 args[j] = args[j].slice(0, args[j].length-1);
                 open = false;
@@ -95,8 +95,10 @@ Client.on("message", msg => {
 
     // Comando
     const { commands } = msg.client;
+    let kill = false;
     commands.forEach(async (command) => {
-        if (command.name == args[0]) {
+        if (command.name == args[0] && !kill) {
+            kill = true;
             console.log(args);
             args = args.slice(1);
             let usersChannel = await get_channel(msg.author.id);
