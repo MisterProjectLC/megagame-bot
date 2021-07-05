@@ -123,8 +123,8 @@ module.exports = {
         if (response.length == 0)
             msg.reply("log vazio.");
         else
-            for (let i = 0; i < response.length; i += 20)
-                msg.reply(response.slice(i, i+20).join("\n"));
+            for (let i = 0; i < response.length; i += 15)
+                msg.reply(response.slice(i, i+15).join("\n"));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador"),
 
