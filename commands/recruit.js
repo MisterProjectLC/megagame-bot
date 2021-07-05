@@ -20,7 +20,8 @@ module.exports = {
             com_args.push(tropas);
 
         // Território existe?
-        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome = $1`, [com_args[0]]);
+        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome = $1 
+                                    AND meuTerritório($1, (SELECT time_nome FROM jogadores WHERE jogador_id = $2))`, [com_args[0], msg.author.id]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
             return;

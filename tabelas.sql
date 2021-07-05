@@ -213,15 +213,34 @@ CREATE TRIGGER detect_movements_merge BEFORE INSERT ON movimentos
 	EXECUTE PROCEDURE movements_merge();
 
 
-CREATE FUNCTION isHostil(nação_atacante varchar(50), territórioAlvo varchar(3)) RETURNS bool AS $$
+CREATE FUNCTION isHostil(naçãoAtacante varchar(50), territórioAlvo varchar(3)) RETURNS bool AS $$
 BEGIN
-    RETURN (EXISTS (SELECT * FROM frotas AS nativas WHERE nativas.nação <> nação_atacante AND
+    RETURN (EXISTS (SELECT * FROM frotas AS nativas WHERE nativas.nação <> naçãoAtacante AND
 		nativas.território = territórioAlvo AND
-		NOT EXISTS (SELECT * FROM tratados_fronteiras WHERE nação1 = nação_atacante AND nação2 = nativas.nação))
+		NOT EXISTS (SELECT * FROM tratados_fronteiras WHERE nação1 = naçãoAtacante AND nação2 = nativas.nação))
 	OR 
-		EXISTS (SELECT * FROM movimentos AS nativos WHERE nativos.nação <> nação_atacante AND
+		EXISTS (SELECT * FROM movimentos AS nativos WHERE nativos.nação <> naçãoAtacante AND
 		nativos.destino = territórioAlvo AND
-		NOT EXISTS (SELECT * FROM tratados_fronteiras WHERE nação1 = nação_atacante AND nação2 = nativos.nação))
+		NOT EXISTS (SELECT * FROM tratados_fronteiras WHERE nação1 = naçãoAtacante AND nação2 = nativos.nação))
 	);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION meuTerritório(naçãoDona varchar(50), territórioAlvo varchar(3)) RETURNS bool AS $$
+BEGIN
+    RETURN EXISTS (SELECT nome FROM territórios WHERE nome = territórioAlvo AND
+    (
+		(isterrestre = true AND EXISTS (SELECT nome FROM terrestres WHERE nome = territórioAlvo AND nação = naçãoDona)) OR
+        (isterrestre = false AND EXISTS (
+			SELECT tera from adjacentes WHERE tera = territórioAlvo AND EXISTS 
+			(SELECT nome FROM terrestres WHERE nome = terb AND nação = naçãoDona) AND
+				NOT EXISTS (
+					SELECT nação FROM frotas WHERE frotas.nação <> naçãoDona AND frotas.território = territórioAlvo AND
+					NOT EXISTS (SELECT nação1 FROM tratados_fronteiras WHERE nação1 = naçãoDona AND nação2 = frotas.nação)
+				)
+			)
+		)
+	));
 END;
 $$ LANGUAGE plpgsql;
