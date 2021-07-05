@@ -14,7 +14,7 @@ module.exports = {
         }
 
         let kill = false;
-        await db.makeQuery("SELECT * FROM grupos WHERE nome = $1", [com_args[2]]).then((response) => {
+        await db.makeQuery("SELECT * FROM grupos WHERE nome = $1", [com_args[0]]).then((response) => {
             let thisGrupo = response.rows[0];
             if (!thisGrupo) {
                 msg.reply("Nação não encontrada.");
