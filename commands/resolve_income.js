@@ -36,7 +36,7 @@ module.exports = {
             for (let nation in delta) {
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = 
                         (SELECT tesoureiro FROM grupos WHERE grupos.nome = $2)`, [delta[nation][0], nation]);
-                db.makeQuery(`UPDATE grupos SET commodities = $1 WHERE grupos.nome = $2`, [delta[nation][1], nation]);
+                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE grupos.nome = $2`, [delta[nation][1], nation]);
                 db.makeQuery(`UPDATE grupos SET ruínas = $1 WHERE grupos.nome = $2`, [delta[nation][2], nation]);
             }
         });
@@ -67,7 +67,7 @@ module.exports = {
             for (let nation in delta) {
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = 
                         (SELECT tesoureiro FROM grupos WHERE grupos.nome = $2)`, [delta[nation][0], nation]);
-                db.makeQuery(`UPDATE grupos SET commodities = $1 WHERE grupos.nome = $2`, [delta[nation][1], nation]);
+                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE grupos.nome = $2`, [delta[nation][1], nation]);
                 db.makeQuery(`UPDATE grupos SET ruínas = $1 WHERE grupos.nome = $2`, [delta[nation][2], nation]);
             }
         });
