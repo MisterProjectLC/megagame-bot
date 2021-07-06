@@ -126,7 +126,7 @@ module.exports = {
             let j = 0;
             for (let i = 0, size = 0; i < response.length; i++) {
                 size += response[i].length;
-                if (size >= 2000) {
+                if (size >= 1800) {
                     msg.reply(response.slice(j, i).join("\n"));
                     j = i;
                     size = 0;
