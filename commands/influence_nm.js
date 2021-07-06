@@ -9,7 +9,10 @@ module.exports = {
     description: "influence_nm <território> <slot(1/2)> <Naga/Mitsu>: coloca influência Naga ou Mitsu no slot escolhido.", 
     min: 3, max: 3,
     execute: async (com_args, msg) => {
-        influence(com_args, msg, this.name);
+        if (com_args[2] == 'Naga' || com_args[2] == 'Mitsu')
+            influence(com_args, msg, this.name);
+        else
+            msg.reply(args_invalidos);
     },
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Nagamitsu") && phase == 1,
     command: (com_args, author_id) => {
