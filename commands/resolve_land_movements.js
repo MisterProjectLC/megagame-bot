@@ -29,7 +29,7 @@ module.exports = {
         WHERE movimentos.destino = terrestres.nome AND (movimentos.nação = terrestres.nação OR terrestres.nação IS NULL)`).then((result) => {
             let rows = result.rows;
             rows.forEach((row) => {
-                db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1, nação = $3 WHERE nome = $2`, [row.forças, row.destino. row.nação]);
+                db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1, nação = $3 WHERE nome = $2`, [row.forças, row.destino, row.nação]);
             })
         });
 
