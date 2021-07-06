@@ -126,13 +126,14 @@ module.exports = {
             let j = 0;
             for (let i = 0, size = 0; i < response.length; i++) {
                 size += response[i].length;
-                if (size > 2000) {
+                if (size >= 2000) {
                     msg.reply(response.slice(j, i).join("\n"));
                     j = i;
                     size = 0;
+                    i--;
                 }
             }
-            if (j != response.length)
+            if (j != response.length-1)
                 msg.reply(response.slice(j, response.length).join("\n"));
         }
     }, 
