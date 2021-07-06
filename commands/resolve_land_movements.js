@@ -25,18 +25,18 @@ module.exports = {
     min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Only movement
-        await db.makeQuery(`SELECT forças, destino FROM movimentos, terrestres
-        WHERE movimentos.destino = terrestres.nome AND movimentos.nação = terrestres.nação`).then((result) => {
+        await db.makeQuery(`SELECT forças, destino, movimentos.nação FROM movimentos, terrestres
+        WHERE movimentos.destino = terrestres.nome AND (movimentos.nação = terrestres.nação OR terrestres.nação IS NULL)`).then((result) => {
             let rows = result.rows;
             rows.forEach((row) => {
-                db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1 WHERE nome = $2`, [row.forças, row.destino]);
+                db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1, nação = $3 WHERE nome = $2`, [row.forças, row.destino. row.nação]);
             })
         });
 
 
         // Attacks
         await db.makeQuery(`SELECT movimentos.nação, tropas, forças, destino FROM movimentos, terrestres
-        WHERE movimentos.destino = terrestres.nome AND movimentos.nação <> terrestres.nação
+        WHERE movimentos.destino = terrestres.nome AND terrestres.nação IS NOT NULL AND movimentos.nação <> terrestres.nação
         ORDER BY destino`).then((result) => {
             let rows = result.rows;
 

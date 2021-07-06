@@ -33,6 +33,11 @@ const get_channel = async (jogador_id) => {
 }
 
 
+const send_message = (channel, message) => {
+    const channel = Client.channels.cache.get(channel);
+    channel.send(message);
+}
+
 
 // Gera os comandos - créditos para Marcus Vinicius Natrielli Garcia
 const commandFiles = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
@@ -111,7 +116,7 @@ Client.on("message", msg => {
 
             if (command.permission(msg, currentPhase) && msg.channel.id == usersChannel &&
                     (currentPhase != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
-                command.execute(args, msg);
+                command.execute(args, msg, send_message);
             else
                 msg.reply(perms_invalidos);
         }

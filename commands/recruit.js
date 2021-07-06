@@ -27,13 +27,13 @@ module.exports = {
             return;
         }
 
-        com_args.push(result.rows[0].isterrestre);
+        com_args.push(result.rows[0].isterrestre.toString());
         log.logCommand(msg, " recruta " + tropas + " tropas em " + com_args[0] + ".", 
                         "recruit", com_args, tropas);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
     command: (com_args, author_id) => {
-        if (com_args[2])
+        if (com_args[2] == 'true')
             db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1 WHERE nome = $2`, [com_args[1], com_args[0]]);
         else
             db.makeQuery(`INSERT INTO frotas VALUES ($1, (SELECT time_nome FROM jogadores WHERE jogador_id = $2), $3)`, 
