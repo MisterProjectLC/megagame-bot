@@ -4,7 +4,7 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "give_tech", 
-    description: "give_tech <especialização> <explicação> [grupo]: dá tecnologia para o grupo (ou todos os grupos).", 
+    description: "give_tech <nome> <explicação> [grupo]: dá tecnologia para o grupo (ou todos os grupos).", 
     min: 2, max: 3,
     execute: (com_args, msg) => {
         // Check args

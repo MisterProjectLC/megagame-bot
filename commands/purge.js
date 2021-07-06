@@ -31,9 +31,15 @@ module.exports = {
             msg.reply(args_invalidos);
             return;
         }
+
+        // Checa custo
+        let custo = 0;
+        await db.makeQuery(`SELECT * FROM logs WHERE nome = 'purge' AND jogador = $1`, [msg.author.id]).then((response) => {
+            if (response.rows.length > 2)
+                custo = 1;
+        });
         
-        log.logCommand(msg, "remove a influência do slot " + slot + " de " + com_args[0] + ".", 
-                        "purge", com_args);
+        log.logCommand(msg, "remove a influência do slot " + slot + " de " + com_args[0] + ".", "purge", custo);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 1,
     command: (com_args) => {

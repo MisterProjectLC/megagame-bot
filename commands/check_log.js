@@ -101,6 +101,12 @@ async function executeCommand(msg, n, execute) {
 }
 
 
+async function cancelInfluence(territorio, slot) {
+    await db.makeQuery("DELETE FROM logs WHERE nome = 'influence' AND args = $1", [territorio + "§" + slot]).then(() =>
+    { msg.reply("Cancelado(s)."); });
+}
+
+
 // Exports
 module.exports = {
     name: "check_log", 
@@ -118,7 +124,8 @@ module.exports = {
         let logs = await db.makeQuery(sql, values);
 
         let response = [];
-        logs.rows.forEach(command => {response.push(command.comando)});
+        let n = 1;
+        logs.rows.forEach(command => {response.push(n.toString() + ": " + command.comando); n += 1;});
 
         if (response.length == 0)
             msg.reply("log vazio.");
@@ -142,5 +149,6 @@ module.exports = {
     logCommand: logCommand,
     undoCommand: undoCommand,
     executeCommand: executeCommand,
-    addToList: addToList
+    addToList: addToList,
+    cancelInfluence: cancelInfluence
 };
