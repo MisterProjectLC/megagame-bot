@@ -34,8 +34,8 @@ const get_channel = async (jogador_id) => {
 
 
 const send_message = (channel, message) => {
-    const channel = Client.channels.cache.get(channel);
-    channel.send(message);
+    const send_channel = Client.channels.cache.get(channel);
+    send_channel.send(message);
 }
 
 
