@@ -3,7 +3,7 @@ var db = require('../external/database.js');
 // Exports
 module.exports = {
     name: "check_influence", 
-    description: "check_influence: mostra todas os comandos de influências deste turno.", 
+    description: "check_influence: mostra todos os comandos de influências deste turno.", 
     min: 0, max: 0,
     execute: async (com_args, msg) => {
         // Ar

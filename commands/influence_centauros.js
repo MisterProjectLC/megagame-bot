@@ -11,7 +11,8 @@ module.exports = {
     execute: async (com_args, msg) => {
         influence(com_args, msg, this.name);
     }, 
-    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Imperador") && phase == 1,
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Centauros") && 
+                                msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 1,
     command: (com_args, author_id) => {
         db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = 'Império dos Centauros' WHERE nome = $1`, [com_args[0]]);
     }
