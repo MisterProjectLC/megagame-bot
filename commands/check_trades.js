@@ -40,7 +40,7 @@ module.exports = {
                 }
 
                 if (theirOffer != '')
-                    response += rows[i].time_nome + ": " + ourOffer + "EM TROCA DE " + i_args[1] + ": " + theirOffer + "\n";
+                    response += rows[i].time_nome + ": " + ourOffer + " EM TROCA DE " + i_args[0] + ": " + theirOffer + "\n";
             }
 
             msg.reply(response);
