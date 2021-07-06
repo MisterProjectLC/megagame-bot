@@ -37,6 +37,6 @@ module.exports = {
             db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1 WHERE nome = $2`, [com_args[1], com_args[0]]);
         else
             db.makeQuery(`INSERT INTO frotas VALUES ($1, (SELECT time_nome FROM jogadores WHERE jogador_id = $2), $3)`, 
-                        [com_args[0], author_id, tropas]);
+                        [com_args[0], author_id, com_args[1]]);
     }
 };
