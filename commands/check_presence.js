@@ -23,9 +23,9 @@ module.exports = {
         await db.makeQuery(`SELECT * FROM terrestres WHERE influência1 = $1 OR influência2 = $1`, [time_nome]).then((result) => {
             let response = "Presença:\n";
             result.rows.forEach((row) => {
-                if (row.influência1)
+                if (row.influência1 == time_nome)
                     response += row.nome + "- Slot 1";
-                    if (row.influência2)
+                if (row.influência2 == time_nome)
                     response += row.nome + "- Slot 2";
             });
 
