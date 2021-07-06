@@ -8,7 +8,7 @@ module.exports = {
     execute: async (com_args, msg) => {
         let time_nome = '';
         
-        await db.makeQuery(`SELECT time_nome FROM jogadores WHERE jogador_id = $1`, [msg.author.id]).then((result) => {
+        await db.makeQuery(`SELECT time_nome, cargo FROM jogadores WHERE jogador_id = $1`, [msg.author.id]).then((result) => {
             let jogador = result.rows[0];
             time_nome = jogador.time_nome;
             let cargo = jogador.cargo;
