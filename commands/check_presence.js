@@ -24,9 +24,9 @@ module.exports = {
             let response = "Presença:\n";
             result.rows.forEach((row) => {
                 if (row.influência1 == time_nome)
-                    response += row.nome + "- Slot 1";
+                    response += row.nome + "- Slot 1\n";
                 if (row.influência2 == time_nome)
-                    response += row.nome + "- Slot 2";
+                    response += row.nome + "- Slot 2\n";
             });
 
             msg.reply(response);
