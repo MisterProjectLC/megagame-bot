@@ -82,13 +82,13 @@ async function undoCommand(msg, n) {
 
 
 async function executeCommand(msg, n, execute) {
-    let logs = await db.makeQuery("SELECT * FROM logs WHERE sucesso = true ORDER BY prioridade");
+    let logs = await db.makeQuery("SELECT * FROM logs WHERE sucesso = true ORDER BY prioridade, jogador, idade");
     let nn = n -1;
     if (logs.rows[nn]) {
         let command = logs.rows[nn];
         if (execute)
             functionList[command.nome](command.args.split('§'), command.jogador);
-        db.makeQuery("DELETE FROM logs WHERE ctid IN (SELECT ctid FROM logs WHERE sucesso = true ORDER BY prioridade LIMIT 1 OFFSET " + 
+        db.makeQuery("DELETE FROM logs WHERE ctid IN (SELECT ctid FROM logs WHERE sucesso = true ORDER BY prioridade, jogador, idade LIMIT 1 OFFSET " + 
                         nn + ")");
 
         if (execute)
@@ -109,7 +109,7 @@ module.exports = {
     execute: async (com_args, msg) => {
         let sql = "", values = [];
         if (msg.member.roles.cache.some(role => role.name == "Moderador"))
-            sql = "SELECT * FROM logs WHERE sucesso = true ORDER BY prioridade";
+            sql = "SELECT * FROM logs WHERE sucesso = true ORDER BY prioridade, jogador, idade";
         
         else {
             sql = "SELECT * FROM logs WHERE jogador = $1 ORDER BY idade";
