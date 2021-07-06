@@ -26,7 +26,7 @@ module.exports = {
         
         log.logCommand(msg, "anuncia tratado de fronteiras com " + com_args[0] + ".", "treaty", com_args, 0);
     }, 
-    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 0,
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado"),
     command: (com_args) => {
         
     }
