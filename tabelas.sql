@@ -110,6 +110,31 @@ CREATE TABLE logs (
 	FOREIGN KEY (jogador) REFERENCES jogadores.jogador_id
 );
 
+
+CREATE OR REPLACE FUNCTION atualiza2_logidade() RETURNS trigger AS $$
+BEGIN
+	UPDATE logs SET idade = idade + 1 WHERE jogador = NEW.jogador;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER idade_logs BEFORE INSERT ON logs
+	FOR EACH ROW
+	EXECUTE PROCEDURE atualiza_logidade();
+
+
+CREATE OR REPLACE FUNCTION atualiza2_logidade() RETURNS trigger AS $$
+BEGIN
+	UPDATE logs SET idade = idade - 1 WHERE idade > OLD.idade AND jogador = OLD.jogador;
+	RETURN old;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER idade2_logs BEFORE DELETE ON logs
+	FOR EACH ROW
+	EXECUTE PROCEDURE atualiza2_logidade();
+
+
 CREATE TABLE territórios (
 	nome varchar(3) PRIMARY KEY,
 	isTerrestre bool DEFAULT true NOT NULL

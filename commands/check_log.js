@@ -122,9 +122,19 @@ module.exports = {
 
         if (response.length == 0)
             msg.reply("log vazio.");
-        else
-            for (let i = 0; i < response.length; i += 10)
-                msg.reply(response.slice(i, i+10).join("\n"));
+        else {
+            let j = 0;
+            for (let i = 0, size = 0; i < response.length; i++) {
+                size += response[i].length;
+                if (size > 2000) {
+                    msg.reply(response.slice(j, i).join("\n"));
+                    j = i;
+                    size = 0;
+                }
+            }
+            if (j != response.length)
+                msg.reply(response.slice(j, response.length).join("\n"));
+        }
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador"),
 

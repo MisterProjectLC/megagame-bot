@@ -20,7 +20,7 @@ module.exports = {
                 let i_args = rows[i].args.split('§');
 
                 // Testando validade e adicionais da troca
-                let ourOffer = i_args[0];
+                let ourOffer = i_args[1];
                 let theirOffer = '';
                 for (let j = i+1; j < rows.length; j++) {
                     if (alreadyChecked.indexOf(rows[j].args) != -1)
