@@ -103,7 +103,8 @@ async function executeCommand(msg, n, execute) {
 
 async function cancelInfluence(territorio, slot) {
     await db.makeQuery("DELETE FROM logs WHERE nome = 'influence' AND args = $1", [territorio + "§" + slot]).then(() =>
-    { msg.reply("Cancelado(s)."); });
+    { return 1; });
+    return 0;
 }
 
 
