@@ -7,7 +7,7 @@ module.exports = {
     description: "check_all_techs: mostra todas as techs do jogo.", 
     min: 0, max: 0,
     execute: async (com_args, msg) => {
-        await db.makeQuery(`SELECT nome, grupo, descrição FROM pesquisas ORDER BY descrição`, [com_args[0]]).then((result) => {
+        await db.makeQuery(`SELECT nome, grupo, descrição FROM pesquisas ORDER BY descrição`).then((result) => {
             let response = [];
             result.rows.forEach((row) => {
                 if (areas.indexOf(row.descrição) == -1)
