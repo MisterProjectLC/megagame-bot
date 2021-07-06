@@ -72,7 +72,7 @@ module.exports = {
             }
         });
 
-        Promise.all([promise1, promise2, promise3]).then(() => msg.reply("Resolvido. Lembre-se do Bobo e seus parceiros, nem dos Nômades!!"));
+        Promise.all([promise1, promise2, promise3]).then(() => msg.reply("Resolvido. Lembre-se de Nagamitsu, a GNN, o Bobo e dos Nômades!!"));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
 };

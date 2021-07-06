@@ -3,8 +3,8 @@ var db = require('../external/database.js');
 
 // Exports
 module.exports = {
-    name: "give_resources", 
-    description: "give_resources <cargo> <qtd>: dá recursos para a pessoa com o cargo especificado.", 
+    name: "give_commodities", 
+    description: "give_commodities <grupo> <qtd>: dá commodities para o grupo especificado.", 
     min: 2, max: 2,
     execute: (com_args, msg) => {
         // Check args
@@ -20,7 +20,7 @@ module.exports = {
             return;
         }
         
-        db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = $2;`,
+        db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2;`,
         [com_args[1], com_args[0]]).then(() => 
             msg.reply("Pago."));
     }, 
