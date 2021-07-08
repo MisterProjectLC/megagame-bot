@@ -124,8 +124,8 @@ module.exports = {
         if (response.length == 0)
             msg.reply("log vazio.");
         else {
-            let j = 0;
-            for (let i = 0, size = 0; i < response.length; i++) {
+            let j = 0, size = 0;
+            for (let i = 0; i < response.length; i++) {
                 size += response[i].length;
                 if (size >= 1800) {
                     msg.reply(response.slice(j, i).join("\n"));
