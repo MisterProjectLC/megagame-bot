@@ -1,5 +1,10 @@
 var db = require('../external/database.js');
-var formatOffer = require('./offer.js').formatOffer;
+
+let formatOffer = (ofertante, ofertado, mEconomia, mCommo, mEtc, sEconomia, sCommo, sEtc) => {
+    return "Oferta de " + ofertante + " para " + ofertado + ":\n " + 
+    "Eles oferecem: " + mEconomia + " economia, " + mCommo + " commodities e " + mEtc + ".\n" + 
+    "Eles querem: " + sEconomia + " economia, " + sCommo + " commodities e " + sEtc + ".\n";
+}
 
 // Exports
 module.exports = {
@@ -10,16 +15,17 @@ module.exports = {
         // Ar
         let nação = '';
         await db.makeQuery(`SELECT * FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)
-                            AND ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)`, [msg.author.id]).then((result) => {
+                            OR ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)`, [msg.author.id]).then((result) => {
             let rows = result.rows;
             let response = "Trocas:\n";
             // Cada troca
             rows.forEach((row) => {
-                response += formatOffer(row.ofertante, row.meconomia, row.mcommodities, row.metc, row.seconomia, row.scommodities, row.setc);
+                response += formatOffer(row.ofertante, row.ofertado, row.meconomia, row.mcommodities, row.metc, row.seconomia, row.scommodities, row.setc);
             });
 
             msg.reply(response);
         });
     },
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador"),
+    formatOffer: formatOffer
 };

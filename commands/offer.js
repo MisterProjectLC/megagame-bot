@@ -90,6 +90,5 @@ module.exports = {
                                                             role.name == "Espectador"),
     command: (com_args) => {
         
-    },
-    formatOffer: formatOffer
+    }
 };
