@@ -111,7 +111,7 @@ CREATE TABLE logs (
 );
 
 
-CREATE OR REPLACE FUNCTION atualiza2_logidade() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION atualiza_logidade() RETURNS trigger AS $$
 BEGIN
 	UPDATE logs SET idade = idade + 1 WHERE jogador = NEW.jogador;
 	RETURN NEW;
@@ -133,6 +133,21 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER idade2_logs BEFORE DELETE ON logs
 	FOR EACH ROW
 	EXECUTE PROCEDURE atualiza2_logidade();
+
+
+CREATE TABLE trocas (
+	ofertante varchar(50),
+	ofertado varchar(50),
+	mEconomia int CHECK (mEconomia >= 0),
+	mCommodities int CHECK (mCommodities >= 0),
+	mEtc text DEFAULT '',
+	sEconomia int CHECK (sEconomia >= 0),
+	sCommodities int CHECK (sCommodities >= 0),
+	sEtc text DEFAULT '',
+	confirmado bool DEFAULT false,
+	FOREIGN KEY (ofertante) REFERENCES grupos(nome),
+	FOREIGN KEY (ofertado) REFERENCES grupos(nome)
+)
 
 
 CREATE TABLE territórios (

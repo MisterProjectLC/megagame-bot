@@ -10,7 +10,7 @@ module.exports = {
     execute: async (com_args, msg) => {
         // Checa se território existe e não já está poluído
         let kill = false;
-        await db.makeQuery('SELECT * FROM territórios WHERE nome = $1 AND poluição = false', [com_args[0]]).then((response) => {
+        await db.makeQuery('SELECT * FROM terrestres WHERE nome = $1 AND poluição = false', [com_args[0]]).then((response) => {
             if (response.rows.length < 1)
                 kill = true;
         });

@@ -112,6 +112,9 @@ module.exports = {
             }
         } else
             com_args.push('1');
+        
+        com_args[0] = com_args[0].toUpperCase();
+        com_args[1] = com_args[1].toUpperCase();
 
         // Checa se movimento é válido
         let kill = false;
