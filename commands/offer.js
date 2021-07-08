@@ -78,7 +78,7 @@ module.exports = {
             com_args[6] = "só";
 
         // Caso já exista, substitui
-        await db.makeQuery("DELETE FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1), ofertado = $2",
+        await db.makeQuery("DELETE FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2",
                             [msg.author.id, com_args[0]]);
         await db.makeQuery(`INSERT INTO trocas VALUES ((SELECT time_nome FROM jogadores WHERE jogador_id = $1), $2, $3, $4, $5, $6, %7, %8)`, 
         [msg.author.id, ...com_args]).then(() => {
