@@ -8,8 +8,8 @@ module.exports = {
     description: "confirm_trade <grupo>: confirma a oferta do grupo escolhido. AVISO: Depois de confirmada, você NÃO pode cancelá-la!",  
     min: 2, max: 2,
     execute: async (com_args, msg, send_message) => {
-        await db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND
-        ofertado = $2`, [msg.author.id, com_args[0]]).then(async (response) => {
+        await db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $2) AND
+        ofertado = $1`, [msg.author.id, com_args[0]]).then(async (response) => {
             if (response.rowCount <= 0) {
                 msg.reply(args_invalidos);
                 return;
