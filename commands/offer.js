@@ -43,7 +43,7 @@ module.exports = {
         // Checar valores numéricos
         let delta = 1;
         let argsNumericos = [1, 2, 4, 5];
-        for (let arg in argsNumericos) {
+        for (let args in argsNumericos) {
             let i = parseInt(com_args[args]);
             if  (i !== i) {
                 msg.reply(args_invalidos);
