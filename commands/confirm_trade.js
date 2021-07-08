@@ -5,7 +5,7 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "confirm_trade", 
-    description: "confirm_trade <grupo>: confirma a oferta do grupo escolhido.",  
+    description: "confirm_trade <grupo>: confirma a oferta do grupo escolhido. AVISO: Depois de confirmada, você NÃO pode cancelá-la!",  
     min: 2, max: 2,
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND

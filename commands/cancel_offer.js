@@ -5,7 +5,7 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "cancel_offer", 
-    description: `cancel_offer <grupo>: cancela a oferta com o grupo selecionado.`,
+    description: `cancel_offer <grupo>: cancela a oferta com o grupo selecionado. Apenas disponível para os autores da troca (por enquanto).`,
     min: 1, max: 1,
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`SELECT * FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND
