@@ -7,7 +7,7 @@ module.exports = {
     description: "check_trades_mod: mostra todas os comandos de troca deste turno.", 
     min: 0, max: 0,
     execute: async (com_args, msg) => {
-        await db.makeQuery(`SELECT * FROM trocas ORDER BY ofertante`, [msg.author.id]).then((result) => {
+        await db.makeQuery(`SELECT * FROM trocas WHERE confirmado = true ORDER BY ofertante`, [msg.author.id]).then((result) => {
             let rows = result.rows;
             let response = "Trocas:\n";
             // Cada troca

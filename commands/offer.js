@@ -84,6 +84,8 @@ module.exports = {
         [msg.author.id, com_args[0], com_args[1], com_args[2], com_args[3], com_args[4], com_args[5], com_args[6]]).then(() => {
             send_message(alvo.canal, formatOffer(autor_dados.time_nome, com_args[1],com_args[2],
                         com_args[3], com_args[4], com_args[5], com_args[6]));
+            
+            msg.reply("Oferta feita.");
         });
         
     }, 
