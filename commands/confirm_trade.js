@@ -50,7 +50,8 @@ module.exports = {
         
         }, () => msg.reply(args_invalidos));
     }, 
-    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção" || role.name == "Espectador"),
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção" || 
+                                                                            role.name == "Espectador"),
     command: (com_args) => {
         
     }
