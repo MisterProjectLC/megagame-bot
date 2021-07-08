@@ -134,7 +134,7 @@ module.exports = {
                     i--;
                 }
             }
-            if (j != response.length-1)
+            if (size > 0)
                 msg.reply(response.slice(j, response.length).join("\n"));
         }
     }, 
