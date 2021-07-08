@@ -5,7 +5,7 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "cancel_offer", 
-    description: `cancel_offer <grupo>: cancela todas as ofertas com o grupo selecionado.`,
+    description: `cancel_offer <grupo>: cancela a oferta com o grupo selecionado.`,
     min: 1, max: 1,
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`SELECT * FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND
@@ -19,8 +19,16 @@ module.exports = {
             let rows = response.rows;
             rows.forEach((row) => {
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE jogador_id = $2`, [parseInt(row.meconomia), msg.author.id]);
-                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, [parseInt(row.mcommodities), row.nome]);
+                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)`, 
+                    [parseInt(row.mcommodities), msg.author.id]);
+
+                if (row.confirmado) {
+                    db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $1)`, 
+                        [parseInt(row.seconomia), row.ofertado]);
+                    db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2)`, [parseInt(row.scommodities), row.ofertado]);
+                }
             });
+
 
             // Deletar
             db.makeQuery(`DELETE FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2`);

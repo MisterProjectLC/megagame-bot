@@ -51,6 +51,7 @@ module.exports = {
             }
         }
 
+        // Gastar recursos
         let recursos = autor_dados.recursos;
         if (!(autor_dados.nome == 'Nagamitsu' || autor_dados.receita == 'Imposto'))
             recursos /= 2; 

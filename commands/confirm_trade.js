@@ -10,6 +10,42 @@ module.exports = {
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND
         ofertado = $2`, [msg.author.id, com_args[0]]).then((response) => {
+            if (response.rowCount <= 0) {
+                msg.reply(args_invalidos);
+                return;
+            }
+
+            let rows = response.rows;
+
+            // Consegue dados do autor
+            let autor_dados = null;
+            await db.makeQuery("SELECT * FROM jogadores, grupos WHERE jogador_id = $1 AND grupos.nome = jogadores.time_nome", 
+            [msg.author.id]).then((responser) => {
+                if (responser.rows[0])
+                    autor_dados = responser.rows[0];
+            });
+            if (autor_dados === null)
+                return;
+
+            // Gastar recursos
+            let recursos = autor_dados.recursos;
+            if (!(autor_dados.nome == 'Nagamitsu' || autor_dados.receita == 'Imposto'))
+                recursos /= 2; 
+
+            if (rows.seconomia <= recursos)
+                db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [rows.seconomia, msg.author.id]);
+            else {
+                msg.reply("Fundos insuficientes!");
+                return;
+            }
+
+            if (rows.scommodities <= autor_dados.commodities)
+                db.makeQuery(`UPDATE grupos SET commodities = commodities - $1 WHERE nome = $2`, [rows.scommodities, autor_dados.nome]);
+            else {
+                msg.reply("Commodities insuficientes!");
+                return;
+            }
+
             msg.reply("Confirmada.");
         
         }, () => msg.reply(args_invalidos));
