@@ -80,9 +80,9 @@ module.exports = {
         // Caso já exista, substitui
         await db.makeQuery("DELETE FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2",
                             [msg.author.id, com_args[0]]);
-        await db.makeQuery(`INSERT INTO trocas VALUES ((SELECT time_nome FROM jogadores WHERE jogador_id = $1), $2, $3, $4, $5, $6, %7, %8)`, 
-        [msg.author.id, ...com_args]).then(() => {
-            send_message(alvo.canal, formatOffer(autor_dados.time_nome, com_args[1], com_args[2],
+        await db.makeQuery(`INSERT INTO trocas VALUES ((SELECT time_nome FROM jogadores WHERE jogador_id = $1), $2, $3, $4, $5, $6, $7, $8)`, 
+        [msg.author.id, com_args[0], com_args[1], com_args[2], com_args[3], com_args[4], com_args[5], com_args[6]]).then(() => {
+            send_message(alvo.canal, formatOffer(autor_dados.time_nome, com_args[1],com_args[2],
                         com_args[3], com_args[4], com_args[5], com_args[6]));
         });
         
