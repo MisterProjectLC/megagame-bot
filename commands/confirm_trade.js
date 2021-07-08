@@ -11,7 +11,8 @@ module.exports = {
         await db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND
         ofertado = $2`, [msg.author.id, com_args[0]]).then((response) => {
             msg.reply("Confirmada.");
-        });
+        
+        }, () => msg.reply(args_invalidos));
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção" || role.name == "Espectador"),
     command: (com_args) => {
