@@ -47,6 +47,9 @@ module.exports = {
             }
 
             msg.reply("Confirmada.");
+            await db.makeQuery('SELECT canal FROM jogadores WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $1)', [row.ofertante]).then((response) => {
+                send_message(response.rows[0].canal, "A troca com " + row.ofertado + " foi confirmada.");
+            });
         
         }, () => msg.reply(args_invalidos));
     }, 

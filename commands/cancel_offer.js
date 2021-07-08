@@ -33,6 +33,10 @@ module.exports = {
             // Deletar
             db.makeQuery(`DELETE FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2`);
 
+            await db.makeQuery('SELECT canal FROM jogadores WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $1)', [row.ofertado]).then((response) => {
+                send_message(response.rows[0].canal, "A troca com " + row.ofertante + " foi cancelada.");
+            });
+
             msg.reply("Deletada(s).");
         },
         
