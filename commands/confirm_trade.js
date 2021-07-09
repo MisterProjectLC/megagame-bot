@@ -8,19 +8,17 @@ module.exports = {
     description: "confirm_trade <grupo>: confirma a oferta do grupo escolhido. AVISO: Depois de confirmada, você NÃO pode cancelá-la!",  
     min: 1, max: 1,
     execute: async (com_args, msg, send_message) => {
-        await db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND
-        ofertante = $2`, [msg.author.id, com_args[0]]).then(async (response) => {
+        await db.makeQuery(`SELECT * FROM trocas WHERE ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertante = $2`, [msg.author.id, com_args[0]]).then(async (response) => {
             console.log(response);
-            if (response.rowCount <= 0) {
+            if (response.rows.length <= 0) {
                 msg.reply(args_invalidos);
                 return;
             }
-
             let rows = response.rows[0];
 
             // Consegue dados do autor
             let autor_dados = null;
-            await db.makeQuery("SELECT * FROM jogadores, grupos WHERE jogador_id = $1 AND grupos.nome = jogadores.time_nome", 
+            await db.makeQuery("SELECT * FROM jogadores, grupos WHERE jogador_id = $1 AND grupos.nome = jogadores.time_nome",
             [msg.author.id]).then((responser) => {
                 if (responser.rows[0])
                     autor_dados = responser.rows[0];
@@ -47,6 +45,7 @@ module.exports = {
                 return;
             }
 
+            db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertante = $2`);
             msg.reply("Confirmada.");
             await db.makeQuery('SELECT canal FROM jogadores WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $1)', [row.ofertante]).then((response) => {
                 send_message(response.rows[0].canal, "A troca com " + row.ofertado + " foi confirmada.");
