@@ -16,7 +16,7 @@ module.exports = {
                 return;
             }
 
-            let rows = response.rows;
+            let rows = response.rows[0];
 
             // Consegue dados do autor
             let autor_dados = null;
@@ -31,7 +31,7 @@ module.exports = {
             // Gastar recursos
             let recursos = autor_dados.recursos;
             if (!(autor_dados.nome == 'Nagamitsu' || autor_dados.receita == 'Imposto'))
-                recursos /= 2; 
+                recursos /= 2;
 
             if (rows.seconomia <= recursos)
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [rows.seconomia, msg.author.id]);
