@@ -17,8 +17,8 @@ module.exports = {
             if (response.length == 0)
                 msg.reply('nenhuma tecnologia encontrada.')
             else {
-                let j = 0;
-                for (let i = 0, size = 0; i < response.length; i++) {
+                let j = 0, size = 0;
+                for (let i = 0; i < response.length; i++) {
                     size += response[i].length;
                     if (size >= 1800) {
                         msg.reply(response.slice(j, i).join("\n"));
@@ -28,7 +28,7 @@ module.exports = {
                     }
                 }
 
-                if (j != response.length-1)
+                if (size > 0)
                     msg.reply(response.slice(j, response.length).join("\n"));
             }
         });
