@@ -10,6 +10,7 @@ module.exports = {
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND
         ofertante = $2`, [msg.author.id, com_args[0]]).then(async (response) => {
+            console.log(response);
             if (response.rowCount <= 0) {
                 msg.reply(args_invalidos);
                 return;
