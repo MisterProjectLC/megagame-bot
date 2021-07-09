@@ -1,5 +1,6 @@
 var db = require('../external/database.js');
 var areas = require('../data/research_areas.json').areas;
+const message_break = require('../utils/message_break.js').message_break;
 
 // Exports
 module.exports = {
@@ -14,23 +15,7 @@ module.exports = {
                     response.push(row.grupo + " - " + row.nome + ": " + row.descrição + "\n");
             });
 
-            if (response.length == 0)
-                msg.reply('nenhuma tecnologia encontrada.')
-            else {
-                let j = 0, size = 0;
-                for (let i = 0; i < response.length; i++) {
-                    size += response[i].length;
-                    if (size >= 1800) {
-                        msg.reply(response.slice(j, i).join("\n"));
-                        j = i;
-                        size = 0;
-                        i--;
-                    }
-                }
-
-                if (size > 0)
-                    msg.reply(response.slice(j, response.length).join("\n"));
-            }
+            message_break(response, "Tech não encontrada.").forEach((message) => msg.reply(message));
         });
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")

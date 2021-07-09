@@ -1,4 +1,5 @@
 const phase = require('../utils/phase.js');
+const message_break = require('../utils/message_break.js').message_break;
 
 // Exports
 module.exports = {
@@ -17,12 +18,7 @@ module.exports = {
                 response.push(">" + command.description);
         });
 
-        if (response.length > 0) {
-            msg.reply(response.slice(0, 20).join("\n"));
-            if (response.length >= 20)
-                msg.reply(response.slice(20, 40).join("\n"));
-        } else
-            msg.reply("comando não encontrado...");
+        message_break(response, "Comando não encontrado...").forEach((message) => msg.reply(message));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador")
 };

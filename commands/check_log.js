@@ -1,4 +1,5 @@
-var db = require('../external/database.js');
+const db = require('../external/database.js');
+const message_break = require('../utils/message_break.js').message_break;
 
 priorityList = {"custom":-30,
                 "overload":-20,
@@ -126,22 +127,7 @@ module.exports = {
         let n = 1;
         logs.rows.forEach(command => {response.push(n.toString() + ": " + command.comando); n += 1;});
 
-        if (response.length == 0)
-            msg.reply("log vazio.");
-        else {
-            let j = 0, size = 0;
-            for (let i = 0; i < response.length; i++) {
-                size += response[i].length;
-                if (size >= 1800) {
-                    msg.reply(response.slice(j, i).join("\n"));
-                    j = i;
-                    size = 0;
-                    i--;
-                }
-            }
-            if (size > 0)
-                msg.reply(response.slice(j, response.length).join("\n"));
-        }
+        message_break(response, "log vazio.").forEach((message) => msg.reply(message));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador"),
 
