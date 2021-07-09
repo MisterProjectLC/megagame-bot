@@ -74,6 +74,11 @@ async function undoCommand(msg, n) {
         if (thisLog.custo > 0)
             await db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE jogador_id = $2`, [thisLog.custo, author.id]);
 
+        // Inverter comando
+        let invertCommand = require('./' + thisLog.nome + '.js').invertCommand;
+        if (invertCommand)
+            invertCommand(thisLog.args);
+
         // Log desfeito
         await db.makeQuery(`DELETE FROM logs WHERE jogador = $1 AND idade = $2`, [author.id, n]);
         msg.reply("Comando removido.");
