@@ -6,7 +6,7 @@ module.exports = {
     name: "propaganda", 
     description: "propaganda <grupo> <delta>: gasta Economia para modificar a OP da nação em relação ao grupo-alvo.", 
     min: 2, max: 2, 
-    execute: (com_args, msg) => {
+    execute: async (com_args, msg) => {
         // Alvo
         let kill = false;
         await db.makeQuery("SELECT * FROM grupos WHERE nome = $1", [com_args[0]]).then((response) => {
