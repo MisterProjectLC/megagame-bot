@@ -8,11 +8,6 @@ module.exports = {
     description: "treaty <nação>: assina tratado PARA ESTE TURNO de fronteiras abertas com nação escolhida. Apenas ocorre caso ambos os lados tiverem assinado.", 
     min: 1, max: 1, 
     execute: async (com_args, msg) => {
-        if (com_args.length < 1) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         let kill = false;
         await db.makeQuery("SELECT * FROM nações WHERE nome = $1", [com_args[0]]).then((response) => {
             let thisGrupo = response.rows[0];
