@@ -65,7 +65,7 @@ async function logCommand(msg, command, name, args, custo) {
 
 async function undoCommand(msg, n) {
     let author = msg.author;
-    await db.makeQuery(`SELECT * FROM logs WHERE jogador = $1 AND idade = $2 - 1 + (SELECT COALESCE(min(idade), 0) FROM logs WHERE jogador = $1)`,
+    await db.makeQuery(`SELECT * FROM logs WHERE jogador = $1 AND idade = $2`,
         [author.id, n]).then(async (response) => {
         let thisLog = response.rows[0];
         if (!thisLog) {
