@@ -18,11 +18,7 @@ module.exports = {
                     response += "Tecnologia - " + row.nome + ": " + row.descrição + "\n";
             });
 
-            
-            if (response == '')
-                msg.reply('nenhuma pesquisa encontrada.')
-            else
-                msg.reply(response);
+            message_break(response, 'nenhuma pesquisa encontrada.').forEach((message) => msg.reply(message));
         });
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Pesquisador"  || role.name == "Espectador")
