@@ -14,9 +14,9 @@ module.exports = {
             let response = [];
             result.rows.forEach((row) => {
                 if (areas.indexOf(row.descrição) != -1)
-                    response.push("Especialização - " + row.nome + ", Área: " + row.descrição + "\n");
+                    response.push("Especialização - " + row.nome + ", Área: " + row.descrição);
                 else
-                    response.push("Tecnologia - " + row.nome + ": " + row.descrição + "\n");
+                    response.push("Tecnologia - " + row.nome + ": " + row.descrição);
             });
 
             message_break(response, 'nenhuma pesquisa encontrada.').forEach((message) => msg.reply(message));
