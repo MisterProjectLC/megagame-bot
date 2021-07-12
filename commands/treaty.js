@@ -5,7 +5,7 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "treaty", 
-    description: "treaty <nação>: assina tratado PARA ESTE TURNO de fronteiras abertas com nação escolhida. Apenas ocorre caso ambos os lados tiverem assinado.", 
+    description: "treaty <nação>: assina tratado PARA ESTE TURNO de fronteiras abertas com nação escolhida. Apenas ocorre caso ambos os lados tiverem assinado. AVISO: Ao enviar o comando, um aviso é feito no canal do outro lado.", 
     min: 1, max: 1, 
     execute: async (com_args, msg) => {
         let kill = false;

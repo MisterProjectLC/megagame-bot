@@ -15,9 +15,13 @@ module.exports = {
                             [row.meconomia, row.ofertado]);
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 FROM grupos WHERE grupos.nome = $2 AND grupos.tesoureiro = jogadores.cargo`,
                             [row.seconomia, row.ofertante]);
-                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE grupos.nome = $2`,
+                db.makeQuery(`UPDATE grupos SET recursos = recursos + (3 * $1) WHERE grupos.nome = $2 AND EXISTS (SELECT * FROM nações WHERE nome = $2)`,
                             [row.mcommodities, row.ofertado]);
-                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE grupos.nome = $2`,
+                db.makeQuery(`UPDATE grupos SET recursos = recursos + (3 * $1) WHERE grupos.nome = $2 AND EXISTS (SELECT * FROM nações WHERE nome = $2)`,
+                            [row.scommodities, row.ofertante]);
+                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE grupos.nome = $2 AND NOT EXISTS (SELECT * FROM nações WHERE nome = $2)`,
+                            [row.mcommodities, row.ofertado]);
+                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE grupos.nome = $2 AND NOT EXISTS (SELECT * FROM nações WHERE nome = $2)`,
                             [row.scommodities, row.ofertante]);
                 change_loyalty(row.ofertante, row.ofertado, 1);
                 change_loyalty(row.ofertado, row.ofertante, 1);

@@ -27,7 +27,7 @@ module.exports = {
             return;
         }
 
-        com_args.push(result.rows[0].isterrestre.toString());
+        com_args.push(new Boolean(result.rows[0].isterrestre).toString());
         log.logCommand(msg, " recruta " + tropas + " tropas em " + com_args[0] + ".", 
                         "recruit", com_args, tropas);
     }, 
