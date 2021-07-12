@@ -13,5 +13,5 @@ module.exports = {
             msg.reply(response);
         });
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Chefe de Facção" || role.name == "Espectador")
 };
