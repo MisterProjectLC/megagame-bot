@@ -15,7 +15,7 @@ priorityList = {"custom":-30,
                 "develop":70,
                 "purge":80,
                 "influence":90,
-                "trade":100
+                "protest":100
                 };
 
 functionList = {}
