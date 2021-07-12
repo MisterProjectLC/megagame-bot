@@ -4,8 +4,8 @@ const message_break = require('../utils/message_break.js').message_break;
 
 // Exports
 module.exports = {
-    name: "check_research", 
-    description: "check_research: mostra as especializações e tecnologias da sua nação.", 
+    name: "check_techs", 
+    description: "check_techs: mostra as especializações e tecnologias da sua nação.", 
     min: 0, max: 0,
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT nome, descrição FROM pesquisas, jogadores
@@ -13,8 +13,8 @@ module.exports = {
         [msg.author.id]).then((result) => {
             let response = [];
             result.rows.forEach((row) => {
-                if (areas.indexOf(row.descrição) != -1)
-                    response.push("Especialização - " + row.nome + ", Área: " + row.descrição);
+                if (areas.indexOf(row.descrição) == -1)
+                    response.push("Tecnologia - " + row.nome + ": " + row.descrição);
             });
 
             message_break(response, 'nenhuma pesquisa encontrada.').forEach((message) => msg.reply(message));
