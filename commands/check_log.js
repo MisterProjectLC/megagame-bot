@@ -37,14 +37,13 @@ async function logCommand(msg, command, name, args, custo) {
         let log = player.time_nome + ", " + player.cargo + ": " + command;
 
         // Economia
-        if (custo > 0) {
-            if (player.recursos - custo < 0) {
-                msg.reply("Recursos insuficientes!");
-                retorno = -1;
-                return;
-            }
-            db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [custo, author.id]);
+        if (custo > 0 && player.recursos - custo < 0) {
+            msg.reply("Recursos insuficientes!");
+            retorno = -1;
+            return;
         }
+            
+        db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [custo, author.id]);
 
         // Lealdade
         let loyalty = 20;
