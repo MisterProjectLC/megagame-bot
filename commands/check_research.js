@@ -25,5 +25,5 @@ module.exports = {
                 msg.reply(response);
         });
     }, 
-    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Pesquisador")
+    permission: (msg) => msg.member.roles.cache.some(role => role.name == "Pesquisador"  || role.name == "Espectador")
 };
