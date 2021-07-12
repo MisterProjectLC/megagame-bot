@@ -130,7 +130,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER idade2_logs BEFORE DELETE ON logs
+CREATE TRIGGER idade2_logs AFTER DELETE ON logs
 	FOR EACH ROW
 	EXECUTE PROCEDURE atualiza2_logidade();
 

@@ -53,8 +53,7 @@ async function logCommand(msg, command, name, args, custo) {
         let success = (Math.floor(Math.random() * 21) <= loyalty);
 
         // Log feito
-        db.makeQuery(`INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso, idade) 
-        VALUES ( $1, $2, $3, $4, $5, $6, $7, 1+(SELECT COALESCE(max(idade), 0) FROM logs WHERE jogador = $1) )`,
+        db.makeQuery(`INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso) VALUES ( $1, $2, $3, $4, $5, $6, $7 )`,
         [author.id, log, name, priorityList[name], args.join('§'), custo, success]);
     });
 
