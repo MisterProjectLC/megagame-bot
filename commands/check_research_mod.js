@@ -1,5 +1,6 @@
 var db = require('../external/database.js');
 var areas = require('../data/research_areas.json').areas;
+const message_break = require('../utils/message_break.js').message_break;
 
 // Exports
 module.exports = {
