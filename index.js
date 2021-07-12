@@ -16,6 +16,7 @@ const aspas_invalidas = "Aspas inválidas.";
 const perms_invalidos = "Você não tem permissão para usar esse comando aqui e/ou agora.";
 Client.commands = new Discord.Collection();
 
+const usageCooldowns = new Discord.Collection();
 
 var channels = {};
 const get_channel = async (jogador_id) => {
@@ -102,23 +103,46 @@ Client.on("message", msg => {
     const { commands } = msg.client;
     let kill = false;
     commands.forEach(async (command) => {
+        // Run command
         if (command.name == args[0] && !kill) {
             kill = true;
             console.log(args);
             args = args.slice(1);
             let usersChannel = await get_channel(msg.author.id);
 
+            // Check args
             let currentPhase = phase.get_phase(msg.guild);
             if (command.min && command.max && !(command.min <= args.length && args.length <= command.max)) {
                 msg.reply(args_invalidos);
                 return;
             }
 
-            if (command.permission(msg, currentPhase) && msg.channel.id == usersChannel &&
-                    (currentPhase != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))
-                command.execute(args, msg, send_message);
-            else
+            if (!(command.permission(msg, currentPhase) && msg.channel.id == usersChannel && 
+            (currentPhase != 2 || msg.member.roles.cache.some(role => role.name == "Moderador")))) {
                 msg.reply(perms_invalidos);
+                return;
+            }
+
+            // Checa cooldown - créditos para Marcus Vinicius Natrielli Garcia
+            if (!usageCooldowns.has(command.name))
+                usageCooldowns.set(command.name, new Discord.Collection());
+
+            const now = Date.now();
+            const timestamps = usageCooldowns.get(command.name);
+            const cooldownAmount = (command.cooldown || 0) * 1000;
+            if (timestamps.has(msg.author.id)) {
+                const expirationTime = timestamps.get(msg.author.id) + cooldownAmount;
+            
+                if (now < expirationTime) {
+                    const timeLeft = (expirationTime - now) / 1000;
+                    msg.reply(`Por favor espere mais ${timeLeft.toFixed(1)} segundos para usar este comando`);
+                    return;
+                }
+            }
+
+            command.execute(args, msg, send_message);
+            if (command.name == 'undo')
+                timestamps.set(msg.author.id, now);
         }
     })
 });

@@ -6,6 +6,7 @@ module.exports = {
     name: "undo", 
     description: "undo [n]: cancela o último comando. Caso 'n' seja dado, cancela o comando dado n comandos atrás.",  
     min: 0, max: 1,
+    cooldown: 10,
     execute: async (com_args, msg) => {
         let n = 1;
         if (com_args.length > 0) {
@@ -16,6 +17,6 @@ module.exports = {
             }
         }
         log.undoCommand(msg, n);
-    }, 
+    },
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Participante" || role.name == "Espectador"),
 };
