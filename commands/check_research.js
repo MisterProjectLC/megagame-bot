@@ -11,12 +11,12 @@ module.exports = {
         await db.makeQuery(`SELECT nome, descrição FROM pesquisas, jogadores
         WHERE jogadores.jogador_id = $1 AND jogadores.time_nome = pesquisas.grupo ORDER BY descrição`,
         [msg.author.id]).then((result) => {
-            let response = "";
+            let response = [];
             result.rows.forEach((row) => {
                 if (areas.indexOf(row.descrição) != -1)
-                    response += "Especialização - " + row.nome + ", Área: " + row.descrição + "\n";
+                    response.push("Especialização - " + row.nome + ", Área: " + row.descrição + "\n");
                 else
-                    response += "Tecnologia - " + row.nome + ": " + row.descrição + "\n";
+                    response.push("Tecnologia - " + row.nome + ": " + row.descrição + "\n");
             });
 
             message_break(response, 'nenhuma pesquisa encontrada.').forEach((message) => msg.reply(message));
