@@ -54,7 +54,7 @@ async function logCommand(msg, command, name, args, custo) {
 
         // Log feito
         db.makeQuery(`INSERT INTO logs(jogador, comando, nome, prioridade, args, custo, sucesso, idade) 
-        VALUES ( $1, $2, $3, $4, $5, $6, $7, 1+(SELECT max(idade) FROM logs WHERE jogador = $1) )`,
+        VALUES ( $1, $2, $3, $4, $5, $6, $7, 1+(SELECT COALESCE(max(idade), 0) FROM logs WHERE jogador = $1) )`,
         [author.id, log, name, priorityList[name], args.join('§'), custo, success]);
     });
 
@@ -65,7 +65,7 @@ async function logCommand(msg, command, name, args, custo) {
 
 async function undoCommand(msg, n) {
     let author = msg.author;
-    await db.makeQuery(`SELECT * FROM logs WHERE jogador = $1 AND idade = $2 - 1 + (SELECT min(idade) FROM logs WHERE jogador = $1)`,
+    await db.makeQuery(`SELECT * FROM logs WHERE jogador = $1 AND idade = $2 - 1 + (SELECT COALESCE(min(idade), 0) FROM logs WHERE jogador = $1)`,
         [author.id, n]).then(async (response) => {
         let thisLog = response.rows[0];
         if (!thisLog) {
