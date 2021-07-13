@@ -47,7 +47,7 @@ module.exports = {
             db.makeQuery(`UPDATE trocas SET confirmado = true WHERE ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertante = $2`, [msg.author.id, com_args[0]]);
             msg.reply("Confirmada.");
             await db.makeQuery('SELECT canal FROM jogadores WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $1)', [rows.ofertante]).then((response) => {
-                send_message(rows.canal, "A troca com " + rows.ofertado + " foi confirmada.");
+                send_message(response.rows[0].canal, "A troca com " + rows.ofertado + " foi confirmada.");
             });
         
         }, () => msg.reply(args_invalidos));
