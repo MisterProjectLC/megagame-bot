@@ -8,7 +8,7 @@ const reações = (território, atacante) => {
     WHERE sujeito = (SELECT nação FROM terrestres WHERE nome = $1) AND 
     objeto = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)`, [território, atacante, multiplicador]);
     
-    db.makeQuery(`UPDATE nações SET lealdade = lealdade - $2
+    db.makeQuery(`UPDATE nações SET lealdade = lealdade - 2*$2
     WHERE nome = (SELECT nação FROM terrestres WHERE nome = $1)`, [território, multiplicador]);
 
     // Attacker reacts
