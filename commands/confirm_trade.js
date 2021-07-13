@@ -5,11 +5,10 @@ var log = require('./check_log.js');
 // Exports
 module.exports = {
     name: "confirm_trade", 
-    description: "confirm_trade <grupo>: confirma a oferta do grupo escolhido. AVISO: Depois de confirmada, você NÃO pode cancelá-la!",  
+    description: "confirm_trade <grupo>: confirma a oferta do grupo escolhido.",  
     min: 1, max: 1,
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`SELECT * FROM trocas WHERE ofertado = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertante = $2`, [msg.author.id, com_args[0]]).then(async (response) => {
-            console.log(response);
             if (response.rows.length <= 0) {
                 msg.reply(args_invalidos);
                 return;
@@ -27,12 +26,12 @@ module.exports = {
                 return;
 
             // Gastar recursos
-            let recursos = autor_dados.recursos;
+            let gastos = parseInt(com_args[1]);
             if (!(autor_dados.nome == 'Nagamitsu' || autor_dados.receita == 'Imposto'))
-                recursos /= 2;
+                gastos *= 2;
 
-            if (rows.seconomia <= recursos)
-                db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [rows.seconomia, msg.author.id]);
+            if (gastos <= autor_dados.recursos)
+                db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [gastos, msg.author.id]);
             else {
                 msg.reply("Fundos insuficientes!");
                 return;

@@ -12,7 +12,7 @@ let formatOffer = (outroTime, mEconomia, mCommo, mEtc, sEconomia, sCommo, sEtc) 
 // Exports
 module.exports = {
     name: "offer", 
-    description: `offer <grupo> <minhaEconomia> <minhasCommodities> <minhasEtc> <suaEconomia> <suasCommodities> <suasEtc>: oferece uma troca. Se já houver uma troca com grupo fornecido, substitui-a. Os primeiros 3 argumentos são sobre sua parte da troca, os outros 3 são da outra parte. AVISO: Ao enviar o comando, um aviso é feito no canal do outro lado.
+    description: `offer <grupo> <minhaEconomia> <minhasCommodities> <minhasEtc> <suaEconomia> <suasCommodities> <suasEtc>: oferece uma troca. Se já houver uma troca com grupo fornecido, falha. Os primeiros 3 argumentos são sobre sua parte da troca, os outros 3 são da outra parte. AVISO: Ao enviar o comando, um aviso é feito no canal do outro lado.
     Exemplo: >offer "Consórcio Magnus" 5 2 "" 0 1 "Território M2"`,
     min: 7, max: 7,
     execute: async (com_args, msg, send_message) => {
@@ -30,15 +30,15 @@ module.exports = {
         let kill = false;
         let alvo = "";
         await db.makeQuery("SELECT * FROM grupos, jogadores WHERE grupos.nome = $1 AND grupos.tesoureiro = jogadores.cargo", 
-                            [com_args[0]]).then((response) => {
+        [com_args[0]]).then((response) => {
             alvo = response.rows[0];
-            if (!alvo) {
-                msg.reply("Nação não encontrada.");
+            if (!alvo)
                 kill = true;
-            }
         });
-        if (kill)
+        if (kill) {
+            msg.reply("Nação não encontrada.");
             return;
+        }
         
         // Checar valores numéricos
         let delta = 1;
@@ -51,13 +51,25 @@ module.exports = {
             }
         }
 
-        // Gastar recursos
-        let recursos = autor_dados.recursos;
-        if (!(autor_dados.nome == 'Nagamitsu' || autor_dados.receita == 'Imposto'))
-            recursos /= 2; 
+        // Checa se troca existe
+        let kill = false;
+        await db.makeQuery("SELECT * FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2",
+        [msg.author.id, com_args[0]]).then((result) => {
+            if (result.rowCount > 0)
+                kill = true;
+        });
+        if (kill) {
+            msg.reply("Uma troca com este grupo já existe. Use o comando 'cancel_offer' para cancelá-la.");
+            return;
+        }
 
-        if (parseInt(com_args[1]) <= recursos)
-            db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [parseInt(com_args[1]), msg.author.id]);
+        // Gastar recursos
+        let gastos = parseInt(com_args[1]);
+        if (!(autor_dados.nome == 'Nagamitsu' || autor_dados.receita == 'Imposto'))
+            gastos *= 2; 
+
+        if (gastos <= autor_dados.recursos)
+            db.makeQuery(`UPDATE jogadores SET recursos = recursos - $1 WHERE jogador_id = $2`, [gastos, msg.author.id]);
         else {
             msg.reply("Fundos insuficientes!");
             return;
@@ -78,8 +90,6 @@ module.exports = {
             com_args[6] = "só";
 
         // Caso já exista, substitui
-        await db.makeQuery("DELETE FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2",
-                            [msg.author.id, com_args[0]]);
         await db.makeQuery(`INSERT INTO trocas VALUES ((SELECT time_nome FROM jogadores WHERE jogador_id = $1), $2, $3, $4, $5, $6, $7, $8)`, 
         [msg.author.id, com_args[0], com_args[1], com_args[2], com_args[3], com_args[4], com_args[5], com_args[6]]).then(() => {
             send_message(alvo.canal, formatOffer(autor_dados.time_nome, com_args[1],com_args[2],
