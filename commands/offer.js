@@ -52,7 +52,7 @@ module.exports = {
         }
 
         // Checa se troca existe
-        let kill = false;
+        kill = false;
         await db.makeQuery("SELECT * FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2",
         [msg.author.id, com_args[0]]).then((result) => {
             if (result.rowCount > 0)
