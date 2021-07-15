@@ -25,8 +25,7 @@ module.exports = {
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos + 2*$1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2) 
                 AND NOT EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
                 [parseInt(row.meconomia), row.ofertante]);
-                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`,
-                [parseInt(row.mcommodities), row.ofertante]);
+                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, [parseInt(row.mcommodities), row.ofertante]);
 
                 if (row.confirmado) {
                     db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2)
@@ -35,14 +34,13 @@ module.exports = {
                     db.makeQuery(`UPDATE jogadores SET recursos = recursos + 2*$1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2) 
                 AND NOT EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
                 [parseInt(row.seconomia), row.ofertado]);
-                    db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, 
-                [parseInt(row.scommodities), row.ofertado]);
+                    db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, [parseInt(row.scommodities), row.ofertado]);
                 }
             });
 
 
             // Deletar
-            db.makeQuery(`DELETE FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2`);
+            db.makeQuery(`DELETE FROM trocas WHERE ofertante = $1 AND ofertado = $2`, [row.ofertante, row.ofertado]);
 
             db.makeQuery('SELECT canal FROM jogadores WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $1)', [row.ofertado]).then((response) => {
                 send_message(response.rows[0].canal, "A troca com " + row.ofertante + " foi cancelada.");
