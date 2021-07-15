@@ -17,27 +17,24 @@ module.exports = {
             }
 
             // Reembolso
-            let rows = response.rows;
-            rows.forEach((row) => {
+            let row = response.rows[0];
+            db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2)
+                AND EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
+                [parseInt(row.meconomia), row.ofertante]);
+            db.makeQuery(`UPDATE jogadores SET recursos = recursos + 2*$1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2) 
+                AND NOT EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
+                [parseInt(row.meconomia), row.ofertante]);
+            db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, [parseInt(row.mcommodities), row.ofertante]);
+
+            if (row.confirmado) {
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2)
                 AND EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
-                [parseInt(row.meconomia), row.ofertante]);
+                    [parseInt(row.seconomia), row.ofertado]);
                 db.makeQuery(`UPDATE jogadores SET recursos = recursos + 2*$1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2) 
                 AND NOT EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
-                [parseInt(row.meconomia), row.ofertante]);
-                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, [parseInt(row.mcommodities), row.ofertante]);
-
-                if (row.confirmado) {
-                    db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2)
-                AND EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
-                [parseInt(row.seconomia), row.ofertado]);
-                    db.makeQuery(`UPDATE jogadores SET recursos = recursos + 2*$1 WHERE cargo = (SELECT tesoureiro FROM grupos WHERE nome = $2) 
-                AND NOT EXISTS (SELECT * FROM grupos, nações WHERE grupos.nome = nações.nome AND grupos.tesoureiro = jogadores.cargo)`, 
-                [parseInt(row.seconomia), row.ofertado]);
-                    db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, [parseInt(row.scommodities), row.ofertado]);
-                }
-            });
-
+                    [parseInt(row.seconomia), row.ofertado]);
+                db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2`, [parseInt(row.scommodities), row.ofertado]);
+            }
 
             // Deletar
             db.makeQuery(`DELETE FROM trocas WHERE ofertante = $1 AND ofertado = $2`, [row.ofertante, row.ofertado]);
