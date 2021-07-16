@@ -6,7 +6,7 @@ var log = require('./check_log.js');
 module.exports = {
     name: "cancel_offer_mod", 
     description: `cancel_offer_mod <ofertante> <ofertado>: deleta a troca.`,
-    min: 1, max: 1,
+    min: 2, max: 2,
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`DELETE FROM trocas WHERE ofertante = $1 AND ofertado = $2`, [...com_args]).then((response) => {
             if (response.rowCount <= 0) {
