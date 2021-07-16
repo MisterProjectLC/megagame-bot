@@ -8,12 +8,6 @@ module.exports = {
     description: "grant_research <especializações> <área> <publicador> <nações> [modificador]: dá especializações do publicador para as nações.", 
     min: 4, max: 5,
     execute: async (com_args, msg) => {
-        // Check args
-        if (areas.indexOf(com_args[1]) == -1) {
-            msg.reply("Área inválida!");
-            return;
-        }
-
         // Check modificador
         let mod = 1;
         if (com_args.length >= 5) {
