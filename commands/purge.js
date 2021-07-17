@@ -36,7 +36,7 @@ module.exports = {
                 custo = 1;
         });
         
-        log.logCommand(msg, "remove a influência do slot " + slot + " de " + com_args[0] + ".", "purge", custo);
+        log.logCommand(msg, "remove a influência do slot " + slot + " de " + com_args[0] + ".", "purge", com_args, custo);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 1,
     command: (com_args) => {
