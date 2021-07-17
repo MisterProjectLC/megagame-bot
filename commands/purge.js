@@ -8,12 +8,6 @@ module.exports = {
     description: "purge <território> <slot(1/2)>: remove a influência do slot escolhido. Os primeiros dois purges são de graça.", 
     min: 2, max: 2,
     execute: async (com_args, msg) => {
-        // Args
-        if (com_args.length < 2) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         // Checa slot
         let slot = parseInt(com_args[1]);
         if (slot !== slot || slot <= 0 || slot > 2) {
@@ -23,9 +17,12 @@ module.exports = {
 
         // Checa se território existe
         let kill = false;
-        await db.makeQuery('SELECT * FROM territórios WHERE nome = $1', [com_args[0]]).then((response) => {
-            if (response.rows.length < 1 || (slot == 1 && response.rows.influência1 === null) || (slot == 2 && response.rows.influência2 === null))
+        await db.makeQuery('SELECT * FROM territórios WHERE nome ILIKE $1', [com_args[0]]).then((response) => {
+            let row = response.rows[0];
+            if (row.length < 1 || (slot == 1 && row.influência1 === null) || (slot == 2 && row.influência2 === null))
                 kill = true;
+            else
+                com_args[0] = row.nome;
         });
         if (kill) {
             msg.reply(args_invalidos);
@@ -43,6 +40,6 @@ module.exports = {
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado") && phase == 1,
     command: (com_args) => {
-        db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = NULL WHERE nome = $1`, [com_args[0]]);
+        db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = NULL WHERE nome ILIKE $1`, [com_args[0]]);
     }
 };
