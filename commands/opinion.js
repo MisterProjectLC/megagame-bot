@@ -29,19 +29,19 @@ module.exports = {
         sql = "";
         values = [];
         if (com_args.length >= 3) {
-            await db.makeQuery("SELECT * FROM nações WHERE nome = $1", [com_args[2]]).then((response) => {
+            await db.makeQuery("SELECT * FROM nações WHERE nome ILIKE $1", [com_args[2]]).then((response) => {
                 let thisGrupo = response.rows[0];
                 if (!thisGrupo) {
                     msg.reply("Nação não encontrada.");
                     kill = true;
                 }
-                sql = "UPDATE opiniões SET valor = valor + $1 WHERE objeto = $2 AND sujeito = $3";
+                sql = "UPDATE opiniões SET valor = valor + $1 WHERE objeto ILIKE $2 AND sujeito ILIKE $3";
                 values = [delta, com_args[0], com_args[2]];
             })
             if (kill)
                 return;
         } else {
-            sql = "UPDATE opiniões SET valor = valor + $1 WHERE objeto = $2";
+            sql = "UPDATE opiniões SET valor = valor + $1 WHERE objeto ILIKE $2";
             values = [delta, com_args[0]];
         }
 

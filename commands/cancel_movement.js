@@ -8,7 +8,7 @@ module.exports = {
     description: `cancel_movement <origem> <destino>: deleta o movimento.`,
     min: 1, max: 1,
     execute: async (com_args, msg, send_message) => {
-        await db.makeQuery(`DELETE FROM movimentos WHERE origem = $1 AND destino = $2`, [...com_args]).then((response) => {
+        await db.makeQuery(`DELETE FROM movimentos WHERE origem ILIKE $1 AND destino ILIKE $2`, [...com_args]).then((response) => {
             if (response.rowCount <= 0) {
                 msg.reply(args_invalidos);
                 return;

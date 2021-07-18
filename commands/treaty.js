@@ -9,7 +9,7 @@ module.exports = {
     min: 1, max: 1, 
     execute: async (com_args, msg) => {
         let kill = false;
-        await db.makeQuery("SELECT * FROM nações WHERE nome = $1", [com_args[0]]).then((response) => {
+        await db.makeQuery("SELECT * FROM nações WHERE nome ILIKE $1", [com_args[0]]).then((response) => {
             let thisGrupo = response.rows[0];
             if (!thisGrupo) {
                 msg.reply("Nação não encontrada.");

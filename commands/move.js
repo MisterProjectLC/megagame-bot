@@ -96,12 +96,6 @@ module.exports = {
     description: "move <origem> <destino> [qtd]: move tropas (tanto terrestres quanto maritimas). Pode demorar para carregar um pouco.", 
     min: 2, max: 3,
     execute: async (com_args, msg) => {
-        // Args
-        if (com_args.length < 2) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         // Checa tropas
         let tropas = 1;
         if (com_args.length >= 3) {

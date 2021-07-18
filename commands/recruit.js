@@ -20,7 +20,7 @@ module.exports = {
             com_args.push(tropas);
 
         // Território existe?
-        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome = $1 
+        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome ILIKE $1 
                                     AND meuTerritório((SELECT time_nome FROM jogadores WHERE jogador_id = $2), $1)`, [com_args[0], msg.author.id]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
@@ -34,7 +34,7 @@ module.exports = {
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
     command: (com_args, author_id) => {
         if (com_args[2] == 'true')
-            db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1 WHERE nome = $2`, [com_args[1], com_args[0]]);
+            db.makeQuery(`UPDATE terrestres SET tropas = tropas + $1 WHERE nome ILIKE $2`, [com_args[1], com_args[0]]);
         else
             db.makeQuery(`INSERT INTO frotas VALUES ($1, (SELECT time_nome FROM jogadores WHERE jogador_id = $2), $3)`, 
                         [com_args[0], author_id, com_args[1]]);

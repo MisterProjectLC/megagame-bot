@@ -25,7 +25,7 @@ module.exports = {
                 db.makeQuery(`INSERT INTO pesquisas VALUES ($1, $2, $3)`, [esp, com_args[1], nação]);
             })
 
-            db.makeQuery(`UPDATE opiniões SET valor = valor + $3 WHERE sujeito = $2 AND objeto = $1`,
+            db.makeQuery(`UPDATE opiniões SET valor = valor + $3 WHERE sujeito ILIKE $2 AND objeto ILIKE $1`,
                             [com_args[2], nação, mod]).then(() => msg.reply("Dado para " + nação + "."), () => msg.reply(args_invalidos));
         })
         

@@ -20,18 +20,20 @@ module.exports = {
             com_args.push(frotas);
 
         // Território existe?
-        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome = $1`, [com_args[0]]);
+        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome ILIKE $1`, [com_args[0]]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
             return;
         }
+        com_args[0] = result.rows[0].nome;
 
         // Nação existe?
-        result = await db.makeQuery(`SELECT nome FROM nações WHERE nome = $1`, [com_args[1]]);
+        result = await db.makeQuery(`SELECT nome FROM nações WHERE nome ILIKE $1`, [com_args[1]]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
             return;
         }
+        com_args[1] = result.rows[0].nome;
 
         log.logCommand(msg, " produz " + frotas + " frotas em " + com_args[0] + " para " + com_args[1] + ".", "produce_fleet", com_args, frotas);
     }, 

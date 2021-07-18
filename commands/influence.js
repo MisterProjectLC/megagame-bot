@@ -16,7 +16,7 @@ var influence = async (com_args, msg, command_name) => {
 
     // Checa se território existe
     let kill = false;
-    await db.makeQuery('SELECT * FROM territórios WHERE nome = $1', [com_args[0]]).then((response) => {
+    await db.makeQuery('SELECT * FROM territórios WHERE nome ILIKE $1', [com_args[0]]).then((response) => {
         if (response.rows.length < 1)
             kill = true;
     });
@@ -38,6 +38,6 @@ module.exports = {
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Facção" || role.name == "Espectador") && phase == 1,
     command: (com_args, author_id) => {
         db.makeQuery(`UPDATE terrestres SET influência` + com_args[1] + ` = (SELECT time_nome FROM jogadores WHERE jogador_id = $1)
-         WHERE nome = $2`, [author_id, com_args[0]]);
+         WHERE nome ILIKE $2`, [author_id, com_args[0]]);
     }
 };

@@ -20,7 +20,7 @@ module.exports = {
             com_args.push(esquadrões);
 
         // Nação existe?
-        result = await db.makeQuery(`SELECT nome FROM nações WHERE nome = $1`, [com_args[1]]);
+        result = await db.makeQuery(`SELECT nome FROM nações WHERE nome ILIKE $1`, [com_args[1]]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
             return;
@@ -30,6 +30,6 @@ module.exports = {
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Nano Inc.") && phase == 1,
     command: (com_args) => {
-        db.makeQuery(`UPDATE nações SET aéreas = aéreas + $2 WHERE nome = $1`, [com_args[0], tropas]);
+        db.makeQuery(`UPDATE nações SET aéreas = aéreas + $2 WHERE nome ILIKE $1`, [com_args[0], tropas]);
     }
 };

@@ -20,7 +20,7 @@ module.exports = {
             return;
         }
         
-        db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo = $2;`,
+        db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 WHERE cargo ILIKE $2;`,
         [com_args[1], com_args[0]]).then((response) => {
             if (response.rowCount == 1)
                 msg.reply("Pago.");

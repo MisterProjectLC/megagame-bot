@@ -20,7 +20,7 @@ module.exports = {
             return;
         }
         
-        db.makeQuery(`UPDATE nações SET lealdade = lealdade + $1 WHERE nome = $2;`, [com_args[1], com_args[0]]).then(() => 
+        db.makeQuery(`UPDATE nações SET lealdade = lealdade + $1 WHERE nome ILIKE $2;`, [com_args[1], com_args[0]]).then(() => 
             msg.reply("Pago."));
     }, 
     permission: (msg) => msg.member.roles.cache.some(role => role.name == "Moderador")

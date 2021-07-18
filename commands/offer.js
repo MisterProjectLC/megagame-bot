@@ -29,7 +29,7 @@ module.exports = {
         // Checar se nação existe
         let kill = false;
         let alvo = "";
-        await db.makeQuery("SELECT * FROM grupos, jogadores WHERE grupos.nome = $1 AND grupos.tesoureiro = jogadores.cargo", 
+        await db.makeQuery("SELECT * FROM grupos, jogadores WHERE grupos.nome ILIKE $1 AND grupos.tesoureiro = jogadores.cargo", 
         [com_args[0]]).then((response) => {
             alvo = response.rows[0];
             if (!alvo)
@@ -39,6 +39,8 @@ module.exports = {
             msg.reply("Nação não encontrada.");
             return;
         }
+
+        com_args[0] = alvo.nome;
         
         // Checar valores numéricos
         let delta = 1;
@@ -53,7 +55,7 @@ module.exports = {
 
         // Checa se troca existe
         kill = false;
-        await db.makeQuery("SELECT * FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado = $2",
+        await db.makeQuery("SELECT * FROM trocas WHERE ofertante = (SELECT time_nome FROM jogadores WHERE jogador_id = $1) AND ofertado ILIKE $2",
         [msg.author.id, com_args[0]]).then((result) => {
             if (result.rowCount > 0)
                 kill = true;
@@ -76,7 +78,7 @@ module.exports = {
         }
 
         if (parseInt(com_args[2]) <= autor_dados.commodities)
-            db.makeQuery(`UPDATE grupos SET commodities = commodities - $1 WHERE nome = $2`, [parseInt(com_args[2]), autor_dados.nome]);
+            db.makeQuery(`UPDATE grupos SET commodities = commodities - $1 WHERE nome ILIKE $2`, [parseInt(com_args[2]), autor_dados.nome]);
         else {
             msg.reply("Commodities insuficientes!");
             return;
@@ -93,7 +95,7 @@ module.exports = {
         await db.makeQuery(`INSERT INTO trocas VALUES ((SELECT time_nome FROM jogadores WHERE jogador_id = $1), $2, $3, $4, $5, $6, $7, $8)`, 
         [msg.author.id, com_args[0], com_args[1], com_args[2], com_args[3], com_args[4], com_args[5], com_args[6]]).then(() => {
             send_message(alvo.canal, formatOffer(autor_dados.time_nome, com_args[1],com_args[2],
-                        com_args[3], com_args[4], com_args[5], com_args[6]) + `\nPara confirmar, use >confirm_trade.`);
+                        com_args[3], com_args[4], com_args[5], com_args[6]) + `\nPara confirmar, use >confirm_trade "` + autor_dados.time_nome + `".`);
             
             msg.reply("Oferta feita.");
         });

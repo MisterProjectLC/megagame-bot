@@ -14,7 +14,7 @@ module.exports = {
         }
 
         // Checa alvo
-        let result = await db.makeQuery(`SELECT time_nome FROM jogadores, grupos WHERE jogadores.cargo = $1 OR grupos.nome = $1`, [com_args[0]]);
+        let result = await db.makeQuery(`SELECT time_nome FROM jogadores, grupos WHERE jogadores.cargo ILIKE $1 OR grupos.nome ILIKE $1`, [com_args[0]]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
             return;

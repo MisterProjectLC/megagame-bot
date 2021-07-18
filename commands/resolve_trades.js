@@ -11,10 +11,14 @@ module.exports = {
             let rows = result.rows;
             // Cada troca
             rows.forEach((row) => {
-                db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 FROM grupos WHERE grupos.nome = $2 AND grupos.tesoureiro = jogadores.cargo`,
-                            [row.meconomia, row.ofertado]);
-                db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 FROM grupos WHERE grupos.nome = $2 AND grupos.tesoureiro = jogadores.cargo`,
-                            [row.seconomia, row.ofertante]);
+                db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 FROM grupos WHERE grupos.nome = $2 AND grupos.tesoureiro = jogadores.cargo
+                AND EXISTS (SELECT * FROM nações WHERE nome = $2)`, [row.meconomia, row.ofertado]);
+                db.makeQuery(`UPDATE jogadores SET recursos = recursos + $1 FROM grupos WHERE grupos.nome = $2 AND grupos.tesoureiro = jogadores.cargo
+                AND EXISTS (SELECT * FROM nações WHERE nome = $2)`, [row.seconomia, row.ofertante]);
+                db.makeQuery(`UPDATE jogadores SET recursos = recursos + (2 * $1) FROM grupos WHERE grupos.nome = $2 AND grupos.tesoureiro = jogadores.cargo
+                AND NOT EXISTS (SELECT * FROM nações WHERE nome = $2)`, [row.meconomia, row.ofertado]);
+                db.makeQuery(`UPDATE jogadores SET recursos = recursos + (2 * $1) FROM grupos WHERE grupos.nome = $2 AND grupos.tesoureiro = jogadores.cargo
+                AND NOT EXISTS (SELECT * FROM nações WHERE nome = $2)`, [row.seconomia, row.ofertante]);
                 db.makeQuery(`UPDATE grupos SET recursos = recursos + (3 * $1) WHERE grupos.nome = $2 AND EXISTS (SELECT * FROM nações WHERE nome = $2)`,
                             [row.mcommodities, row.ofertado]);
                 db.makeQuery(`UPDATE grupos SET recursos = recursos + (3 * $1) WHERE grupos.nome = $2 AND EXISTS (SELECT * FROM nações WHERE nome = $2)`,

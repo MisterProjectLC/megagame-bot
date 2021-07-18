@@ -8,7 +8,7 @@ module.exports = {
     description: `cancel_offer_mod <ofertante> <ofertado>: deleta a troca.`,
     min: 2, max: 2,
     execute: async (com_args, msg, send_message) => {
-        await db.makeQuery(`DELETE FROM trocas WHERE ofertante = $1 AND ofertado = $2`, [...com_args]).then((response) => {
+        await db.makeQuery(`DELETE FROM trocas WHERE ofertante ILIKE $1 AND ofertado ILIKE $2`, [...com_args]).then((response) => {
             if (response.rowCount <= 0) {
                 msg.reply(args_invalidos);
                 return;

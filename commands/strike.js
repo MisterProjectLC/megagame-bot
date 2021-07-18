@@ -38,7 +38,7 @@ module.exports = {
         }
 
         // Território existe?
-        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome = $1`, [com_args[0]]);
+        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome ILIKE $1`, [com_args[0]]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
             return;

@@ -12,7 +12,7 @@ module.exports = {
             return;
         }
 
-        await db.makeQuery(`SELECT * FROM adjacentes WHERE terA = $1 ORDER BY terA`, [com_args[0]]).then((result) => {
+        await db.makeQuery(`SELECT * FROM adjacentes WHERE terA ILIKE $1 ORDER BY terA`, [com_args[0]]).then((result) => {
             let response = "Adjacentes: ";
             result.rows.forEach((row) => {
                 response += row.terb + " ";

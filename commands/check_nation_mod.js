@@ -7,7 +7,7 @@ module.exports = {
     min: 1, max: 1,
     execute: async (com_args, msg) => {
         await db.makeQuery(`SELECT lealdade, objeto, valor, nações.nome
-        FROM nações, opiniões WHERE nações.nome = $1 AND nações.nome = opiniões.sujeito ORDER BY valor`, [com_args[0]]).then((result) => {
+        FROM nações, opiniões WHERE nações.nome ILIKE $1 AND nações.nome = opiniões.sujeito ORDER BY valor`, [com_args[0]]).then((result) => {
             if (!result.rows[0])
                 return;
 

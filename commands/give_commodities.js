@@ -7,12 +7,6 @@ module.exports = {
     description: "give_commodities <grupo> <qtd>: dá commodities para o grupo especificado.", 
     min: 2, max: 2,
     execute: (com_args, msg) => {
-        // Check args
-        if (com_args.length < 2) {
-            msg.reply(args_invalidos);
-            return;
-        }
-
         // Check amount to give
         let i = parseInt(com_args[1]);
         if (i !== i) {
@@ -20,7 +14,7 @@ module.exports = {
             return;
         }
         
-        db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = $2;`,
+        db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome ILIKE $2;`,
         [com_args[1], com_args[0]]).then(() => 
             msg.reply("Pago."));
     }, 
