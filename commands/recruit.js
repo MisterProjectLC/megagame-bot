@@ -20,7 +20,7 @@ module.exports = {
             com_args.push(tropas);
 
         // Território existe?
-        let result = await db.makeQuery(`SELECT nome FROM territórios WHERE nome ILIKE $1 
+        let result = await db.makeQuery(`SELECT * FROM territórios WHERE nome ILIKE $1 
                                     AND meuTerritório((SELECT time_nome FROM jogadores WHERE jogador_id = $2), $1)`, [com_args[0], msg.author.id]);
         if (!result.rows[0]) {
             msg.reply(args_invalidos);
@@ -28,8 +28,7 @@ module.exports = {
         }
 
         com_args.push(new Boolean(result.rows[0].isterrestre).toString());
-        log.logCommand(msg, " recruta " + tropas + " tropas em " + com_args[0] + ".", 
-                        "recruit", com_args, tropas);
+        log.logCommand(msg, " recruta " + tropas + " tropas em " + com_args[0] + ".", "recruit", com_args, tropas);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Militar") && phase == 1,
     command: (com_args, author_id) => {
