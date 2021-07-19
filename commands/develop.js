@@ -16,7 +16,7 @@ develop "Teoria dos Memes" "Virologia, Sociologia" "Teoria de como ideias se esp
         
         await log.logCommand(msg, "desenvolve " + com_args[0] + ", usando " + com_args[1] + ". Explicação: " + com_args[2], "develop", com_args, 1);
     }, 
-    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Pesquisador") && phase == 1,
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Pesquisador" || role.name == "Espectador") && phase == 1,
     command: (com_args, author_id) => {
         db.makeQuery(`INSERT INTO pesquisas SELECT $1, $2, jogadores.time_nome FROM jogadores WHERE jogadores.jogador_id = $3`,
         [com_args[0], com_args[2], author_id]);
