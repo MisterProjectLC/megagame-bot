@@ -18,8 +18,8 @@ module.exports = {
         log.logCommand(msg, "produz " + comms + " commodities.", "produce_commodities", com_args, comms*2);
     }, 
     permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Nano Inc.") && phase == 1,
-    command: (com_args, msg) => {
+    command: (com_args, author_id) => {
         db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE nome = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)`, 
-                    [com_args[0], msg.author.id]);
+                    [com_args[0], author_id]);
     }
 };
