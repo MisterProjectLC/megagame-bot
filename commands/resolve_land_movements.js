@@ -5,7 +5,7 @@ const reações = (território, atacante) => {
 
     // Attacked gets angry
     db.makeQuery(`UPDATE opiniões SET valor = valor - $3 
-    WHERE sujeito = (SELECT nação FROM terrestres WHERE nome = $1) AND 
+    WHERE sujeito = (SELECT nação FROM terrestres WHERE nome ILIKE $1) AND 
     objeto = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)`, [território, atacante, multiplicador]);
     
     db.makeQuery(`UPDATE nações SET lealdade = lealdade - 2*$2
@@ -14,7 +14,7 @@ const reações = (território, atacante) => {
     // Attacker reacts
     db.makeQuery(`UPDATE nações SET lealdade = lealdade - $3*
     (SELECT valor FROM opiniões WHERE sujeito = (SELECT time_nome FROM jogadores WHERE jogador_id = $2) 
-    AND objeto = (SELECT nação FROM terrestres WHERE nome = $1))
+    AND objeto = (SELECT nação FROM terrestres WHERE nome ILIKE $1))
     WHERE nome = (SELECT time_nome FROM jogadores WHERE jogador_id = $2)`, [território, atacante, multiplicador]);
 }
 
@@ -63,11 +63,11 @@ module.exports = {
                 if (invasoresRestantes > 0) {   // Win attack
                     if (secondBiggest != null && rows[biggestArmy].tropas < rows[secondBiggest].forças)
                         invasoresRestantes = rows[biggestArmy].forças - rows[secondBiggest].forças;
-                    db.makeQuery(`UPDATE terrestres SET nação = $1, tropas = $2 WHERE nome = $3`, 
+                    db.makeQuery(`UPDATE terrestres SET nação = $1, tropas = $2 WHERE nome ILIKE $3`, 
                                     [rows[biggestArmy].nação, invasoresRestantes, rows[biggestArmy].destino]);
                 
                 } else  // Win defense
-                    db.makeQuery(`UPDATE terrestres SET tropas = $1 WHERE nome = $2`, [-invasoresRestantes, rows[biggestArmy].destino]);
+                    db.makeQuery(`UPDATE terrestres SET tropas = $1 WHERE nome ILIKE $2`, [-invasoresRestantes, rows[biggestArmy].destino]);
                 i = j-1;
             }
 
