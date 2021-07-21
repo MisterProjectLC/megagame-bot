@@ -9,7 +9,7 @@ module.exports = {
     min: 1, max: 1,
     execute: async (com_args, msg, send_message) => {
         await db.makeQuery(`SELECT * FROM trocas WHERE ofertado = (SELECT grupos.nome FROM grupos, jogadores 
-        WHERE grupos.tesoureiro = jogador.cargo AND jogador_id = $1) AND ofertante ILIKE $2`, [msg.author.id, com_args[0]]).then(async (response) => {
+        WHERE grupos.tesoureiro = jogadores.cargo AND jogador_id = $1) AND ofertante ILIKE $2`, [msg.author.id, com_args[0]]).then(async (response) => {
             if (response.rows.length <= 0) {
                 msg.reply(args_invalidos);
                 return;
