@@ -27,8 +27,8 @@ module.exports = {
                             [row.mcommodities, row.ofertado]);
                 db.makeQuery(`UPDATE grupos SET commodities = commodities + $1 WHERE grupos.nome = $2 AND NOT EXISTS (SELECT * FROM nações WHERE nome = $2)`,
                             [row.scommodities, row.ofertante]);
-                change_loyalty(row.ofertante, row.ofertado, 1);
-                change_loyalty(row.ofertado, row.ofertante, 1);
+                change_loyalty(row.ofertante, row.ofertado, 1, msg);
+                change_loyalty(row.ofertado, row.ofertante, 1, msg);
             });
             db.makeQuery(`DELETE FROM trocas WHERE 1 = 1`);
         });
