@@ -1,4 +1,4 @@
-var args_invalidos = require('../data/errors.js').args_invalidos;
+ var args_invalidos = require('../data/errors.js').args_invalidos;
 var db = require('../external/database.js');
 var log = require('./check_log.js');
 
@@ -38,5 +38,5 @@ module.exports = {
                 msg.reply(args_invalidos);
         });
     }, 
-    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado")
+    permission: (msg, phase) => msg.member.roles.cache.some(role => role.name == "Chefe de Estado" || role.name == "Turing Tester")
 };
