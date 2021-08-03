@@ -18,7 +18,7 @@ module.exports = {
 
             // Consegue dados do autor
             let autor_dados = null;
-            await db.makeQuery("SELECT * FROM jogadores, grupos WHERE jogador_id = $1 AND grupos.nome = jogadores.time_nome",
+            await db.makeQuery("SELECT * FROM jogadores, grupos WHERE jogador_id = $1 AND grupos.tesoureiro = jogadores.cargo",
             [msg.author.id]).then((responser) => {
                 if (responser.rows[0])
                     autor_dados = responser.rows[0];
