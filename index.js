@@ -2,7 +2,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const Client = new Discord.Client();
-const token = '***REMOVED***';
+const token = 'BOA TENTATIVA HACKERZINHO WOWOWOWOW';
 
 const db = require('./external/database.js');
 const log = require('./commands/check_log.js');

@@ -1,10 +1,10 @@
 const {Client} = require('pg');
 
 const pg_client = new Client({
-    user: '***REMOVED***',
-    host: '***REMOVED***',
-    database: '***REMOVED***',
-    password: '***REMOVED***',
+    user: 'BOA TENTATIVA HACKERZINHO WOWOWOWOW',
+    host: 'BOA TENTATIVA HACKERZINHO WOWOWOWOW',
+    database: 'BOA TENTATIVA HACKERZINHO WOWOWOWOW',
+    password: 'BOA TENTATIVA HACKERZINHO WOWOWOWOW',
     port: 5432,
     ssl: { rejectUnauthorized: false }
 });
